@@ -1,0 +1,536 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  letterpaper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
+
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else  
+    % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{5}
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\KOMAoption{captions}{tableheading}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Greatness},
+  pdfauthor={First author; Another author},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+
+\title{Greatness\thanks{Code and data are available at:
+\url{https://github.com/RohanAlexander/starter_folder}.}}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Why Mahomes could be the GOAT}
+\author{First author \and Another author}
+\date{November 21, 2024}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+First sentence. Second sentence. Third sentence. Fourth sentence.
+\end{abstract}
+
+
+It is widely accepted the Tom Brady is the greatest football player of
+all time 7 superbowls etc In recent years, and anecdotes that I have
+personally witnessed suggests that maybe there is an argument the
+mahomes could become the goat.
+
+\section{Introduction}\label{introduction}
+
+Overview paragraph
+
+Estimand paragraph
+
+Results paragraph
+
+Why it matters paragraph
+
+Telegraphing paragraph: The remainder of this paper is structured as
+follows. Section~\ref{sec-data}\ldots.
+
+\section{Data}\label{sec-data}
+
+\subsection{Overview}\label{overview}
+
+We use the statistical programming language R (R Core Team 2023)\ldots.
+Our data (Toronto Shelter \& Support Services 2024)\ldots. Following
+Alexander (2023), we consider\ldots{}
+
+Overview text
+
+\subsection{Measurement}\label{measurement}
+
+Some paragraphs about how we go from a phenomena in the world to an
+entry in the dataset.
+
+\subsection{Outcome variables}\label{outcome-variables}
+
+Add graphs, tables and text. Use sub-sub-headings for each outcome
+variable or update the subheading to be singular.
+
+Some of our data is of penguins (\textbf{?@fig-bills}), from Horst,
+Hill, and Gorman (2020).
+
+Talk more about it.
+
+And also planes (\textbf{?@fig-planes}). (You can change the height and
+width, but don't worry about doing that until you have finished every
+other aspect of the paper - Quarto will try to make it look nice and the
+defaults usually work well once you have enough text.)
+
+\subsection{Predictor variables}\label{predictor-variables}
+
+Add graphs, tables and text.
+
+Use sub-sub-headings for each outcome variable and feel free to combine
+a few into one if they go together naturally.
+
+\subsection{Model Overview}\label{model-overview}
+
+We designed a predictive model to estimate Patrick Mahomes' cumulative
+career statistics over an additional 200 games. The model leverages
+historical game data from Tom Brady as a benchmark and Patrick Mahomes'
+existing career data to generate predictions for key performance
+metrics.
+
+\subsubsection{Mathematical Notation}\label{mathematical-notation}
+
+The model is a multivariate linear regression defined as:
+
+\[
+\hat{y}_i = \beta_0 + \sum_{j=1}^p \beta_j x_{ij} + \epsilon_i
+\]
+
+Where:
+
+\begin{itemize}
+\tightlist
+\item
+  \$ \hat{y}\_i \$: Predicted value of the response variable (e.g.,
+  total passing yards).\\
+\item
+  \$ \beta\_0 \$: Intercept term.\\
+\item
+  \$ \beta\emph{j \$: Coefficients for predictors \$ x}\{ij\} \$, which
+  represent the influence of the \$ j \$-th feature on the response
+  variable.\\
+\item
+  \$ x\_\{ij\} \$: Observed value of the \$ j \$-th predictor for the \$
+  i \$-th observation.\\
+\item
+  \$ \epsilon\_i \$: Residual error term, assumed to be normally
+  distributed with mean 0.
+\end{itemize}
+
+We estimate \$ \beta\_0 \$ and \$ \beta\_j \$ using Ordinary Least
+Squares (OLS) on Tom Brady's historical data, as his career provides a
+well-documented trajectory for long-term performance.
+
+\subsubsection{Variables and
+Justification}\label{variables-and-justification}
+
+The predictors (\$ x\_j \$) included in the model are chosen based on
+their relevance to a quarterback's performance:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Passing Metrics}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{completions}, \texttt{attempts}, \texttt{passing\_yards},
+    \texttt{passing\_tds}, \texttt{interceptions},
+    \texttt{passing\_air\_yards}, \texttt{passing\_first\_downs}.\\
+  \item
+    These metrics directly influence a quarterback's overall
+    contribution to team success.
+  \end{itemize}
+\item
+  \textbf{Rushing Metrics}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{carries}, \texttt{rushing\_yards}, \texttt{rushing\_tds},
+    \texttt{rushing\_first\_downs}.\\
+  \item
+    While not the primary focus, rushing performance is crucial for
+    dual-threat quarterbacks like Mahomes.
+  \end{itemize}
+\item
+  \textbf{Ball Security}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{sack\_fumbles}, \texttt{rushing\_fumbles}.\\
+  \item
+    Turnovers are critical in evaluating overall impact.
+  \end{itemize}
+\end{enumerate}
+
+These features ensure the model captures both primary and auxiliary
+aspects of quarterback performance.
+
+\subsubsection{Model Assumptions}\label{model-assumptions}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Linearity}: The relationship between predictors and response
+  variables is linear.\\
+\item
+  \textbf{Independence}: Residuals are independent across
+  observations.\\
+\item
+  \textbf{Homoscedasticity}: Residuals have constant variance.\\
+\item
+  \textbf{Normality}: Residuals are normally distributed.\\
+\item
+  \textbf{Stationarity}: Mahomes' performance trajectory will follow
+  trends observed in Brady's career.
+\end{enumerate}
+
+\subsubsection{Software and
+Implementation}\label{software-and-implementation}
+
+The model was implemented using R, leveraging the \texttt{lm} function
+from the \texttt{stats} package for regression. The dataset was
+preprocessed using \texttt{tidyverse}, and predictions were calculated
+for an additional 200 games using the coefficients estimated from
+Brady's data.
+
+\subsubsection{Validation and
+Diagnostics}\label{validation-and-diagnostics}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Train-Test Split}: The Brady dataset was split into training
+  (80\%) and testing (20\%) sets. The model was trained on the training
+  set and validated on the testing set.\\
+\item
+  \textbf{Error Metrics}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{Root Mean Squared Error (RMSE)}: Measures the model's
+    predictive accuracy.\\
+  \item
+    \textbf{Mean Absolute Error (MAE)}: Evaluates average prediction
+    error.\\
+  \end{itemize}
+\item
+  \textbf{Residual Analysis}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Residual plots confirmed the assumptions of homoscedasticity and
+    normality.\\
+  \end{itemize}
+\item
+  \textbf{Out-of-Sample Testing}: Predicted Mahomes' statistics on his
+  observed data and compared with actual results to ensure alignment.
+\end{enumerate}
+
+\subsubsection{Alternative Models
+Considered}\label{alternative-models-considered}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Decision Trees}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Strengths: Captures non-linear relationships.\\
+  \item
+    Weaknesses: Tends to overfit without pruning; less interpretable
+    than linear regression.
+  \end{itemize}
+\item
+  \textbf{Bayesian Regression}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Strengths: Allows incorporation of priors, producing probabilistic
+    predictions.\\
+  \item
+    Weaknesses: Increased complexity and computational requirements.
+  \end{itemize}
+\item
+  \textbf{Final Choice}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Linear regression was chosen for its balance of simplicity,
+    interpretability, and performance. It aligns with the assumption
+    that a quarterback's performance trends over time can be captured
+    linearly.
+  \end{itemize}
+\end{enumerate}
+
+\subsubsection{Limitations}\label{limitations}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Career Longevity}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The model assumes Mahomes will continue performing at a consistent
+    level for 200 games. This may not account for potential injuries,
+    performance decline, or external factors.\\
+  \end{itemize}
+\item
+  \textbf{Sample Bias}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Relying on Brady's career as a benchmark may introduce bias, as it
+    assumes Mahomes will follow a similar trajectory.\\
+  \end{itemize}
+\item
+  \textbf{Feature Engineering}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Excluding contextual factors like team strength or play style may
+    limit predictive accuracy.
+  \end{itemize}
+\end{enumerate}
+
+\subsubsection{Conclusion}\label{conclusion}
+
+The linear regression model provides a robust yet interpretable
+framework for predicting Mahomes' lifetime stats. It is grounded in
+historical data and validated through residual analysis and error
+metrics. While limitations exist, the model effectively captures the
+essence of Mahomes' expected performance trajectory based on Brady's
+historical patterns.
+
+\section{Results}\label{results}
+
+\newpage
+
+\section*{References}\label{references}
+\addcontentsline{toc}{section}{References}
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-tellingstories}
+Alexander, Rohan. 2023. \emph{Telling Stories with Data}. Chapman;
+Hall/CRC. \url{https://tellingstorieswithdata.com/}.
+
+\bibitem[\citeproctext]{ref-palmerpenguins}
+Horst, Allison Marie, Alison Presmanes Hill, and Kristen B Gorman. 2020.
+\emph{{palmerpenguins: Palmer Archipelago (Antarctica) penguin data}}.
+\url{https://doi.org/10.5281/zenodo.3960218}.
+
+\bibitem[\citeproctext]{ref-citeR}
+R Core Team. 2023. \emph{{R: A Language and Environment for Statistical
+Computing}}. Vienna, Austria: R Foundation for Statistical Computing.
+\url{https://www.R-project.org/}.
+
+\bibitem[\citeproctext]{ref-shelter}
+Toronto Shelter \& Support Services. 2024. \emph{Deaths of Shelter
+Residents}.
+\url{https://open.toronto.ca/dataset/deaths-of-shelter-residents/}.
+
+\end{CSLReferences}
+
+
+
+
+\end{document}

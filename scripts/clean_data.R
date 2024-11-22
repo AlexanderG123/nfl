@@ -46,11 +46,33 @@ qbr_06_23_filtered <- qbr_06_23 %>%
 nextgen_stats_filtered <- nextgen_stats %>%
   filter(player_display_name %in% c("Tom Brady", "Patrick Mahomes"))
 
-# Merge QBR files (filtered_qbr_2024.parquet and filtered_qbr_06_23.parquet)
-qbr_merged <- bind_rows(qbr_2024_filtered, qbr_06_23_filtered)
+# Select the required columns for game stats
+selected_game_stats_cols <- c(
+  "player_name", "player_display_name", "position", "recent_team",
+  "season", "week", "season_type", "opponent_team", "completions", "attempts",
+  "passing_yards", "passing_tds", "interceptions", "sack_fumbles",
+  "sack_fumbles_lost", "passing_air_yards", "passing_first_downs",
+  "passing_2pt_conversions", "carries", "rushing_yards", "rushing_tds",
+  "rushing_fumbles", "rushing_fumbles_lost", "rushing_first_downs"
+)
 
-# Merge Game Stats files (filtered_player_game_00s.parquet, filtered_player_game_10s.parquet, filtered_player_game_20s.parquet, filtered_player_game_current.parquet)
-game_stats_merged <- bind_rows(game_stats_filtered_00s, game_stats_filtered_10s, game_stats_filtered_20s, game_stats_filtered_current)
+game_stats_merged <- bind_rows(
+  game_stats_filtered_00s,
+  game_stats_filtered_10s,
+  game_stats_filtered_20s,
+  game_stats_filtered_current
+) %>%
+  select(all_of(selected_game_stats_cols))
+
+# Select the required columns for QBR stats
+selected_qbr_cols <- c(
+  "season", "season_type", "team_abb", "name_short",
+  "rank", "qbr_total", "qbr_raw", "name_last", "name_display",
+  "team", "qualified"
+)
+
+qbr_merged <- bind_rows(qbr_2024_filtered, qbr_06_23_filtered) %>%
+  select(all_of(selected_qbr_cols))
 
 # Save the merged data to new Parquet files
 write_parquet(qbr_merged, "~/nfl/data/analysis_data/advanced_stats/merged_qbr.parquet")
@@ -58,4 +80,3 @@ write_parquet(game_stats_merged, "~/nfl/data/analysis_data/game_stats/merged_pla
 
 # Message to confirm success
 message("Merged data for QBR and Game Stats for Tom Brady and Patrick Mahomes has been successfully saved!")
-

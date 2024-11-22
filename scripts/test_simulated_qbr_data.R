@@ -4,7 +4,7 @@ library(arrow)
 library(testthat)
 
 # Set the file path
-file_path <- "~/nfl/data/simulated_data/simulated_qbr_player_data_season_total.parquet"
+file_path <- "~/nfl/data/simulated_data/simulated_qbr_data.parquet"
 
 # Load the data
 data <- read_parquet(file_path)

@@ -1,52 +1,67 @@
 #### Preamble ####
-# Purpose: Simulates a dataset of Australian electoral divisions, including the 
-  #state and party that won each division.
+# Purpose: Simulates and saves a dataset containing select QBR data for 
+# Tom Brady and Patrick Mahomes, retaining only specified columns.
 # Author: Rohan Alexander
 # Date: 26 September 2024
 # Contact: rohan.alexander@utoronto.ca
 # License: MIT
-# Pre-requisites: The `tidyverse` package must be installed
-# Any other information needed? Make sure you are in the `starter_folder` rproj
+# Pre-requisites: The `tidyverse` and `arrow` packages must be installed.
+# Any other information needed? Make sure you are in the `starter_folder` rproj.
 
+# Load necessary libraries
+library(dplyr)
+library(arrow)
 
-#### Workspace setup ####
-library(tidyverse)
-set.seed(853)
+# Set a random seed for reproducibility
+set.seed(123)
 
+# Number of rows to simulate for each player
+n_brady <- 23  # From 2000 to 2022 (23 seasons)
+n_mahomes <- 8  # From 2017 to 2024 (8 seasons)
 
-#### Simulate data ####
-# State names
-states <- c(
-  "New South Wales",
-  "Victoria",
-  "Queensland",
-  "South Australia",
-  "Western Australia",
-  "Tasmania",
-  "Northern Territory",
-  "Australian Capital Territory"
+# Simulate data for Tom Brady (2000-2022)
+brady_data <- tibble(
+  season = rep(2000:2022, each = 2),  # Two rows for each season (Regular and Playoffs)
+  season_type = rep(c("Regular", "Playoffs"), n_brady),
+  game_week = "Season Total",  # All rows will be "Season Total"
+  team_abb = "NE",  # Only for New England Patriots (Tom Brady)
+  name_short = rep("T. Brady", n_brady * 2),
+  rank = round(runif(n_brady * 2, 1, 10), 1),
+  qbr_total = round(runif(n_brady * 2, 50, 100), 1),
+  qbr_raw = round(runif(n_brady * 2, 60, 100), 1),
+  name_last = rep("Brady", n_brady * 2),
+  name_display = rep("Tom Brady", n_brady * 2),
+  team = rep("Patriots", n_brady * 2),
+  qualified = sample(c(TRUE, FALSE), n_brady * 2, replace = TRUE)
 )
 
-# Political parties
-parties <- c("Labor", "Liberal", "Greens", "National", "Other")
-
-# Create a dataset by randomly assigning states and parties to divisions
-analysis_data <- tibble(
-  division = paste("Division", 1:151),  # Add "Division" to make it a character
-  state = sample(
-    states,
-    size = 151,
-    replace = TRUE,
-    prob = c(0.25, 0.25, 0.15, 0.1, 0.1, 0.1, 0.025, 0.025) # Rough state population distribution
-  ),
-  party = sample(
-    parties,
-    size = 151,
-    replace = TRUE,
-    prob = c(0.40, 0.40, 0.05, 0.1, 0.05) # Rough party distribution
-  )
+# Simulate data for Patrick Mahomes (2017-2024)
+mahomes_data <- tibble(
+  season = rep(2017:2024, each = 2),  # Two rows for each season (Regular and Playoffs)
+  season_type = rep(c("Regular", "Playoffs"), n_mahomes),
+  game_week = "Season Total",  # All rows will be "Season Total"
+  team_abb = "KC",  # Only for Kansas City Chiefs (Patrick Mahomes)
+  name_short = rep("P. Mahomes", n_mahomes * 2),
+  rank = round(runif(n_mahomes * 2, 1, 10), 1),
+  qbr_total = round(runif(n_mahomes * 2, 50, 100), 1),
+  qbr_raw = round(runif(n_mahomes * 2, 60, 100), 1),
+  name_last = rep("Mahomes", n_mahomes * 2),
+  name_display = rep("Patrick Mahomes", n_mahomes * 2),
+  team = rep("Chiefs", n_mahomes * 2),
+  qualified = sample(c(TRUE, FALSE), n_mahomes * 2, replace = TRUE)
 )
 
+# Combine the data for both players
+combined_data <- bind_rows(brady_data, mahomes_data)
 
-#### Save data ####
-write_csv(analysis_data, "data/00-simulated_data/simulated_data.csv")
+# Filter only Season Total data (already filtered but ensuring no duplicates)
+data_sim_filtered <- combined_data %>%
+  filter(game_week == "Season Total") %>%
+  select(season, season_type, team_abb, name_short, rank, 
+         qbr_total, qbr_raw, name_last, name_display, team, qualified)
+
+# Save the simulated data to a Parquet file
+write_parquet(data_sim_filtered, "~/nfl/data/simulated_data/simulated_qbr_data.parquet")
+
+# Confirm the data was written
+message("Simulated data for Season Total (Regular and Playoffs) saved to 'simulated_qbr_player_data_season_total.parquet'")

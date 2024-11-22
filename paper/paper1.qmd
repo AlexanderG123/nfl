@@ -2,9 +2,8 @@
 title: "Greatness"
 subtitle: "Why Mahomes could be the GOAT"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: [https://github.com/RohanAlexander/starter_folder](https://github.com/RohanAlexander/starter_folder)."
+  - Alexander Guarasci
+thanks: "Code and data are available at: https://github.com/AlexanderG123/nfl"
 date: today
 date-format: long
 abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
@@ -16,13 +15,15 @@ It is widely accepted the Tom Brady is the greatest football player of all time
 7 superbowls
 etc
 In recent years, and anecdotes that I have personally witnessed suggests that maybe there is an argument the mahomes could become the goat. 
+
+The estimand in this paper is whether or not Patrick Mahomes can usurp Thomas Edward Patrick Brady as the greatest football player of all time
 ```{r}
 #| include: false
 #| warning: false
 #| message: false
 
 library(tidyverse)
-library(palmerpenguins)
+library(arrow)
 ```
 
 
@@ -47,10 +48,11 @@ Telegraphing paragraph: The remainder of this paper is structured as follows. @s
 
 ## Overview
 
-We use the statistical programming language R [@citeR].... Our data [@shelter].... Following @tellingstories, we consider...
+The data used in this paper was taken from nflverse [@citenflverse], which consists of “a set of packages dedicated to data of the National Football League.” 
 
-Overview text
+This analysis was conducted using the programming language R [@citeR] and supplemented with the analytical tools Tidyverse [@citetidyverse], Arrow [@citearrow] etc
 
+The primary data utilized in this paper was QB data from every game throughout both Tom brady's career and Patrick Mahomes' career so far. The larger dataset consisted of 
 ## Measurement
 	
 Some paragraphs about how we go from a phenomena in the world to an entry in the dataset.
@@ -59,7 +61,166 @@ Some paragraphs about how we go from a phenomena in the world to an entry in the
 
 Add graphs, tables and text. Use sub-sub-headings for each outcome variable or update the subheading to be singular.
 
+```{r}
+#| label: fig-total-passing-yards
+#| fig-cap: Total Passing Yards for Mahomes vs Brady
+#| echo: false
+#| warning: false
+#| message: false
 
+# Load and filter player game data
+player_data <- read_parquet("~/nfl/data/analysis_data/game_stats/merged_player_game.parquet")
+player_filtered <- player_data %>% 
+  filter(player_display_name %in% c("Tom Brady", "Patrick Mahomes"))
+
+# Total Passing Yards Plot
+player_filtered %>%
+  group_by(player_display_name) %>%
+  summarise(
+    total_passing_yards = sum(passing_yards, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  ggplot(aes(x = player_display_name, y = total_passing_yards, fill = player_display_name)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("blue", "red")) +
+  theme_minimal() +
+  labs(
+    title = "Total Passing Yards: Mahomes vs Brady",
+    x = "Player",
+    y = "Passing Yards"
+  )
+
+```
+
+```{r}
+#| label: fig-total-rushing-yards
+#| fig-cap: Total Rushing Yards for Mahomes vs Brady
+#| echo: false
+#| warning: false
+#| message: false
+
+# Total Rushing Yards Plot
+player_filtered %>%
+  group_by(player_display_name) %>%
+  summarise(
+    total_rushing_yards = sum(rushing_yards, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  ggplot(aes(x = player_display_name, y = total_rushing_yards, fill = player_display_name)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("blue", "red")) +
+  theme_minimal() +
+  labs(
+    title = "Total Rushing Yards: Mahomes vs Brady",
+    x = "Player",
+    y = "Rushing Yards"
+  )
+```
+
+
+```{r}
+#| label: fig-passing-tds-per-season
+#| fig-cap: Passing Touchdowns per Season for Mahomes and Brady
+#| echo: false
+#| warning: false
+#| message: false
+
+# Passing Touchdowns per Season Plot
+player_data %>%
+  group_by(player_display_name, season) %>%
+  summarise(
+    total_passing_tds = sum(passing_tds, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  ggplot(aes(x = season, y = total_passing_tds, color = player_display_name)) +
+  geom_line() +
+  theme_minimal() +
+  labs(
+    title = "Passing Touchdowns per Season",
+    x = "Season",
+    y = "Total Passing Touchdowns"
+  )
+
+```
+
+```{r}
+#| label: fig-passing-yard-distribution
+#| fig-cap: Passing Yard Distribution for Mahomes and Brady
+#| echo: false
+#| warning: false
+#| message: false
+
+
+player_data %>%
+  ggplot(aes(x = player_display_name, y = passing_yards, fill = player_display_name)) +
+  geom_violin(alpha = 0.7,trim = FALSE) +
+  theme_minimal() +
+  scale_fill_manual(values = c("Mahomes" = "blue", "Brady" = "red")) +
+  labs(
+    title = "Passing Yards Distribution",
+    x = "Player",
+    y = "Passing Yards",
+    fill = "Player"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14),
+    legend.position = "none"
+  )
+```
+
+
+
+```{r}
+#| label: fig-interceptions-per-season
+#| fig-cap: Interceptions per Season for Mahomes and Brady
+#| echo: false
+#| warning: false
+#| message: false
+
+# Interceptions per Season Plot
+player_data %>%
+  group_by(player_display_name, season) %>%
+  summarise(
+    total_interceptions = sum(interceptions, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  ggplot(aes(x = season, y = total_interceptions, color = player_display_name)) +
+  geom_line() +
+  theme_minimal() +
+  labs(
+    title = "Interceptions per Season",
+    x = "Season",
+    y = "Total Interceptions"
+  )
+```
+Talk way more about it. 
+
+```{r}
+#| label: fig-qbr-comparison
+#| fig-cap: QBR Comparison by Season Type (Regular vs. Playoffs) for Brady and Mahomes
+#| echo: false
+#| warning: false
+#| message: false
+
+library(arrow)
+library(ggplot2)
+library(dplyr)
+
+# Load and filter QBR data
+qbr_data <- read_parquet("~/nfl/data/analysis_data/advanced_stats/merged_qbr.parquet")
+qbr_filtered <- qbr_data %>% 
+  filter(name_display %in% c("Tom Brady", "Patrick Mahomes"))
+
+# QBR Comparison Plot
+ggplot(qbr_filtered, aes(x = season_type, y = qbr_total, fill = name_display)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(
+    title = "QBR Comparison by Season Type (Regular vs. Playoffs)",
+    x = "Season Type",
+    y = "QBR"
+  )
+```
 
 Some of our data is of penguins (@fig-bills), from @palmerpenguins.
 
@@ -94,17 +255,17 @@ $$
 
 Where:
 
-- $ \hat{y}_i $: Predicted value of the response variable (e.g., total passing yards).  
-- $ \beta_0 $: Intercept term.  
-- $ \beta_j $: Coefficients for predictors $ x_{ij} $, which represent the influence of the $ j $-th feature on the response variable.  
-- $ x_{ij} $: Observed value of the $ j $-th predictor for the $ i $-th observation.  
-- $ \epsilon_i $: Residual error term, assumed to be normally distributed with mean 0.  
+- $\hat{y}_i$: Predicted value of the response variable (e.g., total passing yards).  
+- $\beta_0$: Intercept term.  
+- $\beta_j$: Coefficients for predictors $x_{ij}$, representing the influence of the $j$-th feature on the response variable.  
+- $x_{ij}$: Observed value of the $j$-th predictor for the $i$-th observation.  
+- $\epsilon_i$: Residual error term, assumed to be normally distributed with mean 0.  
 
-We estimate $ \beta_0 $ and $ \beta_j $ using Ordinary Least Squares (OLS) on Tom Brady's historical data, as his career provides a well-documented trajectory for long-term performance.
+We estimate $\beta_0$ and $\beta_j$ using Ordinary Least Squares (OLS) on Tom Brady's historical data, as his career provides a well-documented trajectory for long-term performance.
 
 ### Variables and Justification
 
-The predictors ($ x_j $) included in the model are chosen based on their relevance to a quarterback's performance:
+The predictors ($x_j$) included in the model are chosen based on their relevance to a quarterback's performance:
 
 1. **Passing Metrics**:  
    - `completions`, `attempts`, `passing_yards`, `passing_tds`, `interceptions`, `passing_air_yards`, `passing_first_downs`.  
@@ -168,7 +329,6 @@ The model was implemented using R, leveraging the `lm` function from the `stats`
 
 The linear regression model provides a robust yet interpretable framework for predicting Mahomes' lifetime stats. It is grounded in historical data and validated through residual analysis and error metrics. While limitations exist, the model effectively captures the essence of Mahomes' expected performance trajectory based on Brady's historical patterns.
 
-# Results
 
 
 
@@ -176,5 +336,3 @@ The linear regression model provides a robust yet interpretable framework for pr
 
 
 # References
-
-
