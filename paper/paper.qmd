@@ -1,12 +1,12 @@
 ---
-title: "Greatness"
-subtitle: "Why Mahomes could be the GOAT"
+title: "Defining Greatness"
+subtitle: "A Comparative Analysis of Tom Brady and Patrick Mahomes"
 author: 
   - Alexander Guarasci
 thanks: "Code and data are available at: https://github.com/AlexanderG123/nfl"
 date: today
 date-format: long
-abstract: "This paper compares NFL quarterbacks Tom Brady and Patrick Mahomes, focusing on their statistical performances. Analyzing their respective career data, this paper uses predictive modelling to forecast Patrick Mahomes future. It finds that while both have impressive career statistics, ultimately, playoff victories—particularly Super Bowl wins—serve as a more definitive measure of greatness. By examining these factors, the paper highlights how the NFL’s dynamic context impacts player evaluation and legacy assessment."
+abstract: "This paper compares NFL quarterbacks Tom Brady and Patrick Mahomes, focusing on their statistical performances. Analyzing their respective career data, this paper uses predictive modelling to forecast Patrick Mahomes future. It finds that while both have impressive career statistics, ultimately, playoff victories, particularly Super Bowl wins, serve as a more definitive measure of greatness. By examining these players, the paper highlights how the NFL’s dynamic context impacts player evaluation and legacy assessment."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -25,11 +25,13 @@ library(arrow)
 
 What defines greatness in professional sports? The question has captivated fans, analysts, and historians alike, sparking countless debates that go beyond numbers and records. In football, this discussion often converges on the legacies of two extraordinary quarterbacks: Tom Brady and Patrick Mahomes. Brady’s career, spanning more than two decades, includes seven Super Bowl victories and an unmatched reputation for clutch performances. Mahomes, on the other hand, has quickly ascended as the face of a new generation, dazzling fans with his athleticism, creativity, and championship pedigree. This paper investigates the evolving narrative of greatness in the NFL through a detailed comparison of these two legends, exploring what their careers reveal about the broader concept of sports excellence.
 
-While statistical achievements and accolades are critical, they alone cannot encapsulate the essence of greatness. Both Brady and Mahomes boast extraordinary numbers, yet their legacies diverge in ways that reflect deeper, qualitative factors such as resilience, leadership, and the ability to deliver in high-pressure moments. Ultimately, this paper aims to answer the question, can Patrick Mahomes usurp Tom Brady as the greatest football player of all time.
+While statistical achievements and accolades are critical, they alone cannot encapsulate the essence of greatness. Both Brady and Mahomes boast extraordinary numbers, yet their legacies diverge in ways that reflect deeper, qualitative factors such as resilience, leadership, and the ability to deliver in high-pressure moments. 
+
+This paper ultimately aims to answer the question, can Patrick Mahomes usurp Tom Brady as the greatest football player of all time.
 
 To answer this question, this analysis draws on statistical data, examining past performance, and broader career trajectories. It evaluates what each quarterback has achieved to date and aims to project Patrick Mahomes future.
 
-The findings reveal that Brady’s legacy is unparalleled in its longevity and sheer accomplishment, while Mahomes’ career trajectory suggests he does have the potential to surpass Brady, it is highly unlikely that he does from a statistcal standpoint. These insights are significant not only for appreciating their contributions to football but also for understanding the broader implications of what society values in its icons. .
+The findings reveal that Brady’s legacy is unparalleled in its longevity and sheer accomplishment, while Mahomes’ career trajectory suggests he does have the potential to surpass Brady, it is highly unlikely that he does from a statistcal standpoint. These insights are significant not only for appreciating their contributions to football but also for understanding the broader implications of what society values in its icons.
 
 The paper is structured as follows: the first section provides an explanation of the data used in this paper, what it shows and where it comes from. The second section discusses the model used to predict the future of Patrick Mahomes career. The third section shows the results of the model. The final section discusses the implication of the model as well as provides more insight into the two players legacies. 
 
@@ -45,7 +47,7 @@ The paper is structured as follows: the first section provides an explanation of
 
 The data used in this analysis originates from nflverse [@citenflverse], a comprehensive collection of packages tailored for National Football League (NFL) data. These packages aggregate statistics, player information, and game results spanning several decades. For this paper, the focus was narrowed to quarterback (QB) performance data, specifically for Tom Brady and Patrick Mahomes.
 
-The analysis was conducted in R [@citeR], leveraging tools from the Tidyverse [@citetidyverse] and Arrow [@citearrow] packages. The primary dataset included QB-specific data from every NFL game played since 2000, encompassing over 55 columns detailing various player performance metrics. Additional data sources were used for advanced metrics, notably ESPN’s Quarterback Rating (QBR), which encapsulates QB efficiency across multiple dimensions of gameplay.
+The analysis was conducted in R [@citeR], leveraging tools from the Tidyverse [@citetidyverse], Arrow [@citearrow], Knitr [@citeknitr] packages. The primary dataset included QB-specific data from every NFL game played since 2000, encompassing over 55 columns detailing various player performance metrics. Additional data sources were used for advanced metrics, notably ESPN’s Quarterback Rating (QBR), which encapsulates QB efficiency across multiple dimensions of gameplay.
 
 The analysis focuses on comparing the careers of two of the greatest football players of all time: Tom Brady and Patrick Mahomes. Both players’ careers are comprehensively represented in the dataset, allowing for an in-depth comparison of Mahomes’ trajectory against Brady’s completed career. To achieve this, the dataset was filtered to include only these two players, with irrelevant data removed. For example, receiving yards were excluded since quarterbacks rarely make receptions. The refined dataset highlights key metrics such as passing yards, completions, attempts, interceptions, sacks, sack fumbles (and lost), rushing yards, passing first downs, and a variety of quarterback rushing stats, which have become increasingly relevant in modern NFL play.
 
@@ -89,12 +91,13 @@ player_filtered %>%
   ) %>%
   ggplot(aes(x = player_display_name, y = total_passing_yards, fill = player_display_name)) +
   geom_bar(stat = "identity") +
-  scale_fill_manual(values = c("blue", "red")) +
+  scale_fill_manual(values = c("red","blue")) +
   theme_minimal() +
   labs(
     title = "Total Passing Yards: Mahomes vs Brady",
     x = "Player",
-    y = "Passing Yards"
+    y = "Passing Yards",
+    fill = ''
   )
 
 ```
@@ -116,12 +119,13 @@ player_filtered %>%
   ) %>%
   ggplot(aes(x = player_display_name, y = total_rushing_yards, fill = player_display_name)) +
   geom_bar(stat = "identity") +
-  scale_fill_manual(values = c("blue", "red")) +
+  scale_fill_manual(values = c("red","blue")) +
   theme_minimal() +
   labs(
     title = "Total Rushing Yards: Mahomes vs Brady",
     x = "Player",
-    y = "Rushing Yards"
+    y = "Rushing Yards",
+    fill = ''
   )
 ```
 [@fig-total-rushing-yards] reveals an interesting contrast in rushing yards between the two quarterbacks. Despite playing over three times as many games as Mahomes, Tom Brady falls significantly short, with Mahomes amassing more than twice as many rushing yards. This reflects a broader evolution in the NFL, where modern quarterbacks are often required to be dual threats, capable of both passing and running effectively. Players like Mahomes exemplify this shift, adapting to the athletic demands of today’s game, unlike Brady, who represents the traditional pocket-passing archetype of previous eras.
@@ -146,7 +150,8 @@ player_data %>%
   labs(
     title = "Passing Touchdowns per Season",
     x = "Season",
-    y = "Total Passing Touchdowns"
+    y = "Total Passing Touchdowns",
+    colour = "Player"
   )
 
 ```
@@ -197,7 +202,8 @@ player_data %>%
   labs(
     title = "Interceptions per Season",
     x = "Season",
-    y = "Total Interceptions"
+    y = "Total Interceptions",
+    color = "Player"
   )
 ```
 [@fig-interceptions-per-season] highlights the number of interceptions thrown by each player per season. Interceptions are critical errors that often stem from poor decision-making or miscommunication. This graph provides insight into the players’ decision-making abilities and their capacity to minimize costly turnovers. 
@@ -223,8 +229,9 @@ ggplot(qbr_filtered, aes(x = season_type, y = qbr_total, fill = name_display)) +
   theme_minimal() +
   labs(
     title = "QBR Comparison by Season Type (Regular vs. Playoffs)",
-    x = "Season Type",
-    y = "QBR"
+    x = "",
+    y = "QBR",
+    fill = 'Player'
   )
 ```
 
@@ -262,15 +269,15 @@ We estimate $\beta_0$ and $\beta_j$ using Ordinary Least Squares (OLS) on Tom Br
 The predictors ($x_j$) included in the model are chosen based on their relevance to a quarterback's performance:
 
 1. **Passing Metrics**:  
-   - `completions`, `attempts`, `passing_yards`, `passing_tds`, `interceptions`, `passing_air_yards`, `passing_first_downs`.  
+   - `completions`, `attempts`, `passing_yards`, `passing_tds`, `interceptions`, `passing_air_yards`.  
    - These metrics directly influence a quarterback’s overall contribution to team success.
 
 2. **Rushing Metrics**:  
-   - `carries`, `rushing_yards`, `rushing_tds`, `rushing_first_downs`.  
+   - `carries`, `rushing_yards`, `rushing_tds`.  
    - While not the primary focus, rushing performance is crucial for dual-threat quarterbacks like Mahomes.
 
 3. **Ball Security**:  
-   - `sack_fumbles`, `rushing_fumbles`.  
+   - `sack_fumbles`.  
    - Turnovers are critical in evaluating overall impact.
 
 These features ensure the model captures both primary and auxiliary aspects of quarterback performance.
@@ -313,7 +320,7 @@ The model was implemented using R, leveraging the `lm` function from the `stats`
 ### Limitations
 
 1. **Career Longevity**:  
-   - The model assumes Mahomes will continue performing at a consistent level for 200 games. This may not account for potential injuries, performance decline, or external factors.  
+   - The model assumes Mahomes will continue performing at a consistent level for 200 games. This may not account for potential injuries, performance decline, or external factors. This is already a very generous assumption, considering only two quarterbacks in NFL history have played more than 324 career games, but because Brady has played 381 games, it is important for our analysis to assume that Mahomes will be able to sustain success. 
 2. **Sample Bias**:  
    - Relying on Brady's career as a benchmark may introduce bias, as it assumes Mahomes will follow a similar trajectory.  
 3. **Feature Engineering**:  
@@ -324,18 +331,19 @@ The model was implemented using R, leveraging the `lm` function from the `stats`
 The linear regression model provides a robust yet interpretable framework for predicting Mahomes' lifetime stats. It is grounded in historical data and validated through residual analysis and error metrics. While limitations exist, the model effectively captures the essence of Mahomes' expected performance trajectory based on Brady's historical patterns.
 
 # Results
-The table [@tbl-brady-mahomes-career-stats] compares Tom Brady’s career statistics with Patrick Mahomes’ projected lifetime statistics. Tom Brady, with 8,954 completions and 13,973 attempts, has significantly more career completions and attempts than Mahomes, who is projected to finish with 7,756.72 completions and 11,902.61 attempts. Brady’s total passing yards of 102,616 far exceed Mahomes’ projected 89,548.38, highlighting Brady’s longevity and consistent performance. Similarly, Brady has thrown 738 passing touchdowns, whereas Mahomes is projected to finish with 660.38. Brady also has more interceptions (252 compared to Mahomes’ 213.59). These differences underscore Brady’s long career and high volume of passing, which has contributed to his unparalleled career achievements.
+ [@tbl-brady-mahomes-career-stats] compares Tom Brady’s career statistics with Patrick Mahomes’ projected lifetime statistics. Tom Brady, with 8,954 completions and 13,973 attempts, has significantly more career completions and attempts than Mahomes, who is projected to finish with 7,756.72 completions and 11,902.61 attempts. Brady’s total passing yards of 102,616 far exceed Mahomes’ projected 89,548.38, highlighting Brady’s longevity and consistent performance. Similarly, Brady has thrown 738 passing touchdowns, whereas Mahomes is projected to finish with 660.38. Brady also has more interceptions (252 compared to Mahomes’ 213.59). These differences underscore Brady’s long career and high volume of passing, which has contributed to his unparalleled career achievements.
 
 ```{r}
 #| label: tbl-brady-mahomes-career-stats
 #| echo: false
 #| warning: false
 #| message: false
+#| tbl-cap: "Career Totals: Brady vs Mahomes"
+#| tbl.pos: "H" # Ensures the table stays in the intended location
 
-# Load required libraries
 library(arrow)
 library(dplyr)
-library(knitr)
+library(tinytable)
 
 # File paths
 game_stats_path <- "~/nfl/data/analysis_data/game_stats/merged_player_game.parquet"
@@ -348,41 +356,106 @@ mahomes_data <- read.csv(mahomes_predictions_path)
 # Columns to sum
 columns_to_sum <- c(
   "completions", "attempts", "passing_yards", "passing_tds", "interceptions",
-  "sack_fumbles", "sack_fumbles_lost", "passing_air_yards", 
-  "passing_first_downs", "passing_2pt_conversions", "carries", 
-  "rushing_yards", "rushing_tds", "rushing_fumbles", 
-  "rushing_fumbles_lost", "rushing_first_downs"
+  "sack_fumbles", "passing_air_yards", "carries", "rushing_yards", "rushing_tds"
 )
 
-# Summed stats for Tom Brady
+# Calculate totals for Brady
 brady_totals <- player_data %>%
   filter(player_name == "T.Brady") %>%
-  summarise(across(all_of(columns_to_sum), ~ sum(.x, na.rm = TRUE)))
+  summarise(across(all_of(columns_to_sum), ~ sum(.x, na.rm = TRUE))) %>%
+  mutate(player = "Tom Brady")
 
-# Combine Brady's stats with Mahomes' projected stats
-combined_stats <- brady_totals %>%
-  mutate(player = "Tom Brady") %>%
-  bind_rows(mahomes_data %>% mutate(player = "Patrick Mahomes"))
+# Combine Brady and Mahomes' data
+combined_stats <- bind_rows(
+  brady_totals,
+  mahomes_data %>% mutate(player = "Patrick Mahomes")
+)
 
-# Arrange and display as a table
-combined_stats %>%
+# Restructure data for readability and rename columns
+final_table <- combined_stats %>%
   select(player, all_of(columns_to_sum)) %>%
-  kable(
-    caption = "Comparison of Tom Brady's Career Stats and Patrick Mahomes' Projected Stats",
-    col.names = c("Player", "Completions", "Attempts", "Passing Yards", "Passing TDs", 
-                  "Interceptions", "Sack Fumbles", "Sack Fumbles Lost", "Passing Air Yards", 
-                  "Passing 1st Downs", "Passing 2pt Conversions", "Carries", 
-                  "Rushing Yards", "Rushing TDs", "Rushing Fumbles", 
-                  "Rushing Fumbles Lost", "Rushing 1st Downs")
-  )
+  rename(
+    `Player` = player,
+    `Comp` = completions,
+    `Att` = attempts,
+    `Pass Yds` = passing_yards,
+    `Pass TDs` = passing_tds,
+    `INTs` = interceptions,
+    `Fumbles` = sack_fumbles,
+    `Air Yds` = passing_air_yards,
+    `Carries` = carries,
+    `Rush Yds` = rushing_yards,
+    `Rush TDs` = rushing_tds
+  ) %>%
+  mutate(across(where(is.numeric), round))
+
+# Generate the table using tinytable
+tt(final_table, width = 1.5) |> style_tt( fontsize = .5)
 ```
 
 
-In terms of ball security, Mahomes appears to have a slight edge. He is projected to have 88.01 sack fumbles and 36.02 sack fumbles lost, compared to Brady’s 113 sack fumbles and 46 lost. This suggests that Mahomes, with his ability to evade pressure, may have a more efficient style of play when it comes to protecting the football.
+
 
 When comparing rushing statistics, Mahomes stands out as the more mobile quarterback. While Brady’s rushing stats are modest, with 1,256 rushing yards and 35 rushing touchdowns, Mahomes is projected to amass 3,282.88 rushing yards and 36.28 rushing touchdowns, showing a clear advantage in rushing ability. Additionally, Mahomes is expected to have 319.90 rushing first downs, surpassing Brady’s 266. This emphasizes Mahomes’ dual-threat capability, which contributes to his versatility as a quarterback.
 
 Despite Mahomes’ impressive projected stats, Brady’s career longevity and overall impact on the game have allowed him to achieve these remarkable milestones. Mahomes will need to maintain his performance over a long period to catch up to Brady’s cumulative totals. Brady’s consistency and durability throughout his career, as seen in his passing and rushing stats, have firmly established him as one of the greatest quarterbacks in NFL history. Mahomes, on the other hand, shows great potential and is already a future first balot Hall of Famer, but he has yet to match Brady’s career volume.
+
+[@tbl-brady-mahomes-career-game-stats], shows the per game projected averages for Mahomes and compares it with Bradys stats.
+
+
+```{r}
+#| label: tbl-brady-mahomes-career-game-stats
+#| echo: false
+#| warning: false
+#| message: false
+#| tbl-cap: "Career Averages: Brady vs Mahomes"
+#| pos: "H" # Ensures the table stays in the intended location
+
+library(dplyr)
+library(tinytable)
+
+# Add total games played for both players
+brady_games <- 381
+mahomes_games <- 324
+
+# Calculate per-game stats
+per_game_stats <- combined_stats %>%
+  mutate(across(
+    all_of(columns_to_sum),
+    ~ .x / if_else(player == "Tom Brady", brady_games, mahomes_games),
+    .names = "per_game_{.col}"
+  ))
+
+# Restructure data for readability
+final_table <- per_game_stats %>%
+  select(player, starts_with("per_game")) %>%
+  rename_with(~ gsub("per_game_", "", .), starts_with("per_game")) %>%
+  mutate(across(where(is.numeric), round, digits = 2)) %>%
+  rename(
+    `Player (Per Game)` = player,
+    `Comp` = completions,
+    `Att` = attempts,
+    `Pass Yds` = passing_yards,
+    `Pass TDs` = passing_tds,
+    `INTs` = interceptions,
+    `Fumbles` = sack_fumbles,
+    `Air Yds` = passing_air_yards,
+    `Carries` = carries,
+    `Rush Yds` = rushing_yards,
+    `Rush TDs` = rushing_tds
+  )
+
+# Generate the table using tinytable
+tt(final_table, width = 1.5) |> style_tt( fontsize = .5)
+```
+
+The analysis of per-game statistics reveals a clear edge for Patrick Mahomes over Tom Brady across nearly every metric. Mahomes completes slightly more passes per game (23.94) than Brady (23.50), despite attempting a comparable number of throws (36.74 for Mahomes vs. 36.67 for Brady). This small difference results in a higher completion percentage for Mahomes at 65.17%, compared to Brady’s 64.08%, indicating a marginal but noteworthy advantage in passing efficiency. Mahomes also outpaces Brady in passing yards per game, averaging 276.38 to Brady’s 269.33, further emphasizing his ability to generate more offense through the air.
+
+In terms of scoring, Mahomes demonstrates a superior passing touchdown rate, averaging 2.04 touchdowns per game compared to Brady’s 1.94. Both players maintain an impressive level of ball security, with nearly identical interception rates per game (0.66), but Mahomes edges Brady in minimizing sack-related turnovers, with 0.27 sack fumbles per game versus Brady’s 0.30. This reflects Mahomes’ adaptability under pressure and his efficiency in avoiding costly mistakes.
+
+The most significant disparity appears in rushing statistics, where Mahomes outshines Brady by a wide margin. Mahomes averages 10.13 rushing yards per game, more than triple Brady’s 3.30, and his higher number of carries per game (2.85 vs. 2.12) underscores his ability to contribute as a dual-threat quarterback. Furthermore, Mahomes’ rushing touchdown rate (0.11 per game) surpasses Brady’s 0.09, further illustrating his dynamic impact on the ground.
+
+These results suggest that Mahomes not only matches but surpasses Brady’s per-game contributions in every key category, showcasing his all-around ability as a quarterback. The consistent superiority in passing, rushing, and overall efficiency highlights Mahomes’ potential to redefine expectations for quarterback performance in the NFL.
 
 # Discussion
 
@@ -391,16 +464,16 @@ This paper provides a rigorous comparison of Tom Brady and Patrick Mahomes to ev
 
 
 ## What is something that we learn about the world? 
-One significant insight from this paper is the impact of career longevity on perceptions of greatness. Tom Brady’s career, spanning over two decades, showcases not only impressive cumulative statistics but also a sustained level of excellence, particularly in high-stakes postseason environments. This longevity has set an unprecedented benchmark for future players. In contrast, Patrick Mahomes, despite a much shorter career, demonstrates a rapid accumulation of achievements, emphasizing efficiency and adaptability to the modern NFL. This analysis highlights how differing career arcs can define greatness and challenges the traditional emphasis on cumulative statistics alone. The reality of the situation is, you need to play a lot of football to win seven Super Bowls!
+One significant insight from this paper is the impact of career longevity on perceptions of greatness. Tom Brady’s career, spanning over two decades, showcases not only impressive cumulative statistics but also a sustained level of excellence, particularly in high-stakes postseason environments. This longevity has set an unprecedented benchmark for future players. In contrast, Patrick Mahomes, despite a much shorter career, demonstrates a rapid accumulation of achievements, emphasizing efficiency and adaptability to the modern NFL. This analysis highlights how differing career arcs can define greatness and challenges the traditional emphasis on cumulative statistics alone. The reality of the situation is, you need to play a lot of football to win seven Super Bowls, and the nature of the sport makes it really difficult to assume a player will even be in the league five years from now and even more difficult to assume that they will have any form of continued success over this period. 
 
 ## What is something else that we learn about the world? 
-Greatness in sports, especially in the context of legendary quarterbacks like Tom Brady and Patrick Mahomes, cannot be boiled down to statistics alone. While both players have put up astonishing numbers throughout their careers, attempting to compare them purely through stats would be an oversimplification of their legacies. Statistics, while important, fail to account for the intangibles—the ability to perform under pressure, the knack for leading a team to victory in critical moments, and the sheer will to win when it matters most.
+Greatness in sports, especially in the context of legendary quarterbacks like Tom Brady and Patrick Mahomes, cannot be boiled down to statistics alone. While both players have put up astonishing numbers throughout their careers, attempting to compare them purely through stats is an oversimplification of their legacies. Statistics, while important, fail to account for the intangibles—the ability to perform under pressure, the knack for leading a team to victory in critical moments, and the sheer will to win when it matters most.
 
 When evaluating greatness, Super Bowl victories tend to stand as the ultimate benchmark, and here lies the defining gap between Brady and Mahomes. Tom Brady has set an unparalleled standard with seven Super Bowl wins, a number that remains a daunting goal for any quarterback to reach. Mahomes, as brilliant as he has been in his career so far, still has a long way to go in this regard. With three Super Bowl wins to his name, he would need four more championships just to tie Brady’s record—an extraordinary feat that would require sustained excellence over many years.
 
-Adding to Brady’s case is his direct record against Mahomes in the playoffs. The two have faced off twice in high-stakes games, and on both occasions, Brady emerged victorious. The first was in the 2018 AFC Championship game, a thrilling overtime battle that ended with Brady’s Patriots edging out Mahomes’ Chiefs. The second, and perhaps more significant, was in Super Bowl LV, where Brady’s Buccaneers decisively defeated Mahomes and the Chiefs, cementing Brady’s legacy as the ultimate competitor on the biggest stage.
+Adding to Brady’s case is his direct record against Mahomes in the playoffs. The two have faced off twice in the playoffs, and on both occasions, Brady emerged victorious. The first was in the 2018 AFC Championship game, a thrilling overtime battle that ended with Brady’s Patriots edging out Mahomes’ Chiefs. The second, and perhaps more significant, was in Super Bowl LV, where Brady’s Buccaneers decisively defeated Mahomes and the Chiefs, cementing Brady’s legacy as the ultimate competitor on the biggest stage.
 
-However, Mahomes’ career is still young, and his playoff track record so far is nothing short of remarkable. Aside from the two playoff losses to Brady, Mahomes has only lost one other postseason game. In fact, he has never been eliminated from the playoffs before reaching the AFC Championship, a testament to his dominance and consistency. His playoff record of 15-3 is astounding and reflects a level of performance that no quarterbacks in history have ever matched.
+However, Mahomes’ career is still young, and his playoff track record so far is nothing short of remarkable. Aside from the two playoff losses to Brady, Mahomes has only lost one other postseason game. In fact, he has never been eliminated from contention before reaching the AFC Championship, a testament to his dominance and consistency. His playoff record of 15-3 is astounding and reflects a level of performance that no other quarterback in history has ever matched.
 
 This also underscores a critical point about Mahomes: his ability to consistently elevate his game when the stakes are highest. Winning playoff games is no small feat, yet Mahomes has made it look routine, guiding his team deep into the postseason year after year. His style of play—combining pinpoint accuracy, athleticism, and creativity—has redefined the quarterback position and captivated fans and analysts alike.
 
@@ -412,7 +485,7 @@ While this paper offers valuable insights, there are several limitations worth a
 ## What is left to learn or how should we proceed in the future?
 Future research should address the limitations identified above by incorporating a broader set of variables, such as coaching quality, team composition, and strength of schedule, to provide a more holistic assessment of quarterback performance. Additionally, as Mahomes’ career progresses, longitudinal studies can reevaluate his trajectory using updated data. Advances in machine learning could also enable the development of more sophisticated models to predict player performance under varying conditions. Lastly, further exploration into how the definition of greatness evolves across sports can provide context for comparing athletes from different eras, enhancing the broader conversation about legacy and excellence.
 
-Other than that, the only thing left to do is wait and see. The Mahomes led Cheifs are 9-1 as this is being written. They are coming off back to back Superbowl victories, they are in the peak of a dynasty and all that is left to do is witness greatness unfold. 
+Other than that, the only thing left to do is wait and see. The Mahomes led Cheifs are 9-1 as this is being written. They are coming off back to back Superbowl victories, they are in the midst of a dynasty and all that is left to do is witness greatness unfold. 
 
 
 
