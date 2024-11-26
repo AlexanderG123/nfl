@@ -4,7 +4,7 @@
 # Date: 26 November 2024
 # Contact: alexander.guarasci@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: The `nflverse` and `arrow` packages must be installed
+# Pre-requisites: The `nflverse` and `arrow` packages must be installed, run download_data.R 
 
 
 library(arrow)
