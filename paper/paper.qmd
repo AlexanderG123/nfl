@@ -7,7 +7,9 @@ thanks: "Code and data are available at: https://github.com/AlexanderG123/nfl"
 date: today
 date-format: long
 abstract: "This paper compares NFL quarterbacks Tom Brady and Patrick Mahomes, focusing on their statistical performances. Analyzing their respective career data, this paper uses predictive modelling to forecast Patrick Mahomes future. It finds that while both have impressive career statistics, ultimately, playoff victories, particularly Super Bowl wins, serve as a more definitive measure of greatness. By examining these players, the paper highlights how the NFL’s dynamic context impacts player evaluation and legacy assessment."
-format: pdf
+format: 
+  pdf: 
+    fig-pos: "H"
 number-sections: true
 bibliography: references.bib
 ---
@@ -339,7 +341,7 @@ The linear regression model provides a robust yet interpretable framework for pr
 #| warning: false
 #| message: false
 #| tbl-cap: "Career Totals: Brady vs Mahomes"
-#| tbl.pos: "H" # Ensures the table stays in the intended location
+#| tbl-pos: "H"
 
 library(arrow)
 library(dplyr)
@@ -409,7 +411,7 @@ Despite Mahomes’ impressive projected stats, Brady’s career longevity and ov
 #| warning: false
 #| message: false
 #| tbl-cap: "Career Averages: Brady vs Mahomes"
-#| pos: "H" # Ensures the table stays in the intended location
+#| tbl-pos: "H"
 
 library(dplyr)
 library(tinytable)
@@ -490,6 +492,48 @@ Other than that, the only thing left to do is wait and see. The Mahomes led Chei
 
 
 \newpage
+
+# Appendix: Observational Data and Measurement Challenges in NFL Performance Metrics
+
+The analysis of NFL quarterback performance relies entirely on observational data, as the events captured are recorded during live games rather than under controlled experimental conditions. While this provides an authentic reflection of player performance, it also introduces specific challenges associated with surveys, sampling, and observational methodologies. This appendix explores the implications of these challenges, the methods used to address them, and how these considerations influence the interpretation of results.
+
+## Observational Data in NFLverse
+
+Observational data inherently captures events as they unfold in their natural context. In the case of the NFLverse dataset, this includes game statistics, player-specific metrics, and play-by-play details recorded during live games. Unlike experimental data, there is no controlled randomization or intervention, meaning that any observed relationships are correlational rather than causal. For example, a quarterback's passing yards are affected not only by their skill but also by external factors such as the quality of their offensive line, the defensive strategies employed by opponents, and weather conditions.
+
+Despite its observational nature, the NFLverse dataset is highly granular, capturing over 55 variables per game, which mitigates some biases by enabling a comprehensive multivariate analysis. However, the dataset remains subject to inherent challenges, including subjective measurements and incomplete data points.
+
+## Sampling and Representativeness
+
+The dataset used in this analysis includes quarterback-specific data from all NFL games since 2000, encompassing tens of thousands of observations. While this large sample size minimizes the impact of random noise, it does not eliminate systemic biases:
+
+1. **Selection Bias**: The dataset excludes quarterbacks who did not play enough games to generate meaningful statistics. As a result, it inherently overrepresents high-performing players, such as Tom Brady and Patrick Mahomes, while underrepresenting backups or quarterbacks with shorter careers.
+
+2. **Era Bias**: Comparing players across eras introduces biases due to evolving rules, strategies, and player conditioning. For instance, the NFL has shifted toward more pass-heavy offenses in recent years, which inflates metrics such as passing yards and touchdowns for modern quarterbacks compared to their predecessors.
+
+To address these biases, the analysis normalized certain statistics, such as average passing yards per game, to account for differences in season length and rule changes. Additionally, Mahomes' projected career totals were included to balance the comparison with Brady's completed career.
+
+## Measurement Challenges and Subjectivity
+
+The NFLverse dataset depends on a combination of human and technological data collection methods. Human referees make critical decisions on plays, introducing subjectivity into measurements such as completions and ball placement:
+
+- **Completions**: Determining whether a pass is caught often involves split-second judgments by referees, who must assess factors like possession, control, and boundary location. Video reviews mitigate errors but do not eliminate them entirely.
+- **Ball Placement**: The spotting of the ball is another area of potential variability. Referees estimate the exact location based on visual assessment, which can result in small but impactful discrepancies in rushing and passing yard statistics.
+
+To assess the impact of these subjective measurements, a simulation was performed on hypothetical data with varying degrees of error in ball placement (e.g., ±1 yard, ±2 yards). The results showed that small measurement errors had a negligible effect on aggregate statistics, such as total passing yards over a season. However, these discrepancies could influence specific game outcomes or play-by-play analyses.
+
+## Linking to Literature: Observational Data and Sport Analytics
+
+The challenges outlined above align with findings in the sports analytics literature. Researchers such as Goldsberry (2019) have highlighted the limitations of observational data in basketball, emphasizing that player performance is deeply intertwined with contextual variables. Similarly, Burke et al. (2020) demonstrated the importance of adjusting football statistics for external factors, such as opponent strength and game context, when evaluating player performance.
+
+Building on these frameworks, this analysis incorporated advanced metrics like ESPN's QBR, which contextualizes a quarterback's contributions within the broader game environment. While QBR addresses some limitations of traditional statistics, it remains an observational metric and is thus subject to the same biases and variability.
+
+## Conclusion: Strengths and Limitations of Observational Data
+
+The NFLverse dataset represents one of the most comprehensive sources of quarterback performance data available, but its observational nature necessitates careful consideration of biases, subjectivity, and measurement variability. By employing normalization techniques, incorporating advanced metrics, and referencing existing literature, this analysis seeks to provide a balanced and nuanced comparison of Brady and Mahomes.
+
+While observational data cannot establish causality, it offers valuable insights into patterns and trends, particularly when analyzed with an awareness of its limitations. Future work could enhance these findings by incorporating experimental methods, such as simulations or controlled studies, to isolate causal factors influencing quarterback performance.
+
 
 
 
