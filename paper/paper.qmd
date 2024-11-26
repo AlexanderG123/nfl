@@ -10,7 +10,7 @@ abstract: "This paper compares NFL quarterbacks Tom Brady and Patrick Mahomes, f
 format: 
   pdf: 
     fig-pos: "H"
-number-sections: true
+number-sections: false
 bibliography: references.bib
 ---
 ```{r}
@@ -49,7 +49,7 @@ The paper is structured as follows: the first section provides an explanation of
 
 The data used in this analysis originates from nflverse [@citenflverse], a comprehensive collection of packages tailored for National Football League (NFL) data. These packages aggregate statistics, player information, and game results spanning several decades. For this paper, the focus was narrowed to quarterback (QB) performance data, specifically for Tom Brady and Patrick Mahomes.
 
-The analysis was conducted in R [@citeR], leveraging tools from the Tidyverse [@citetidyverse], Arrow [@citearrow], Knitr [@citeknitr] packages. The primary dataset included QB-specific data from every NFL game played since 2000, encompassing over 55 columns detailing various player performance metrics. Additional data sources were used for advanced metrics, notably ESPN’s Quarterback Rating (QBR), which encapsulates QB efficiency across multiple dimensions of gameplay.
+The analysis was conducted in R [@citeR], leveraging tools from the Tidyverse [@citetidyverse], Arrow [@citearrow], Knitr [@citeknitr], Testthat [@citett] packages. The primary dataset included QB-specific data from every NFL game played since 2000, encompassing over 55 columns detailing various player performance metrics. Additional data sources were used for advanced metrics, notably ESPN’s Quarterback Rating (QBR), which encapsulates QB efficiency across multiple dimensions of gameplay.
 
 The analysis focuses on comparing the careers of two of the greatest football players of all time: Tom Brady and Patrick Mahomes. Both players’ careers are comprehensively represented in the dataset, allowing for an in-depth comparison of Mahomes’ trajectory against Brady’s completed career. To achieve this, the dataset was filtered to include only these two players, with irrelevant data removed. For example, receiving yards were excluded since quarterbacks rarely make receptions. The refined dataset highlights key metrics such as passing yards, completions, attempts, interceptions, sacks, sack fumbles (and lost), rushing yards, passing first downs, and a variety of quarterback rushing stats, which have become increasingly relevant in modern NFL play.
 
@@ -349,7 +349,7 @@ library(tinytable)
 
 # File paths
 game_stats_path <- "~/nfl/data/analysis_data/game_stats/merged_player_game.parquet"
-mahomes_predictions_path <- "~/nfl/data/analysis_data/mahomes_lifetime_predictions.csv"
+mahomes_predictions_path <- "~/nfl/data/model_data/mahomes_lifetime_predictions.csv"
 
 # Read the data
 player_data <- read_parquet(game_stats_path)

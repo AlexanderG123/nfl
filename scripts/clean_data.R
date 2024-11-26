@@ -1,7 +1,11 @@
-# Install necessary packages if not already installed
-if (!requireNamespace("arrow", quietly = TRUE)) {
-  install.packages("arrow")
-}
+#### Preamble ####
+# Purpose: Cleans NFL data for Tom Brady and Patrick Mahomes
+# Author: Alexander Guarasci
+# Date: 26 November 2024
+# Contact: alexander.guarasci@mail.utoronto.ca
+# License: MIT
+# Pre-requisites: The `nflverse` and `arrow` packages must be installed
+
 
 library(arrow)
 library(dplyr)

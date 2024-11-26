@@ -1,11 +1,12 @@
-# Install nflverse if not already installed
-if (!requireNamespace("nflverse", quietly = TRUE)) {
-  install.packages("nflverse")
-}
+#### Preamble ####
+# Purpose: Downloads NFL data for Tom Brady and Patrick Mahomes
+# Author: Alexander Guarasci
+# Date: 26 November 2024
+# Contact: alexander.guarasci@mail.utoronto.ca
+# License: MIT
+# Pre-requisites: The `nflverse` and `arrow` packages must be installed
+
 library(nflverse)
-if (!requireNamespace("arrow", quietly = TRUE)) {
-  install.packages("arrow")
-}
 library(arrow)
 
 
@@ -48,21 +49,5 @@ tryCatch({
 nextgen_16_24 <- load_nextgen_stats(seasons = 2016:2024)
 write_parquet(nextgen_16_24, "data/raw_data/advanced_stats/next_gen.parquet")
 
-# pbp data
 
-for (year in 2000:2024) {
-  tryCatch({
-    # Download play-by-play data for the year
-    pbp_data <- load_pbp(year)
-    # Define the output file name
-    output_file <- file.path("data/raw_data/pbp", paste0("playbyplay_", year, ".parquet"))
-    # Save the data as a Parquet file
-    write_parquet(pbp_data, output_file)
-    # Message indicating success
-    message("Successfully saved play-by-play data for ", year, " to ", output_file)
-  }, error = function(e) {
-    # Handle any errors
-    message("Error downloading or saving data for ", year, ": ", e$message)
-  })
-}
 

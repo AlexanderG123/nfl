@@ -9,17 +9,16 @@ This repo provides students with a foundation for their own projects associated 
 
 The repo is structured as:
 
--   `data/raw_data` contains the raw data as obtained from X.
--   `data/analysis_data` contains the cleaned dataset that was constructed.
--   `model` contains fitted models. 
--   `other` contains relevant literature, details about LLM chat interactions, and sketches.
--   `paper` contains the files used to generate the paper, including the Quarto document and reference bibliography file, as well as the PDF of the paper. 
--   `scripts` contains the R scripts used to simulate, download and clean data.
+-   `data` contains the raw data as obtained from nflverse, the simulated data, the cleaned data for analysis as well as the data output by the model.
+-   `models` contains the R script that runs and trains the model. 
+-   `other` details about LLM chat interactions, and sketches.
+-   `paper` contains the files used to generate the paper, including the Quarto document and reference bibliography file, as well as the PDF of the paper and the model card. 
+-   `scripts` contains the R scripts used to simulate, download, test and clean the data.
 
 
 ## Statement on LLM usage
 
-Aspects of the code were written with the help of the auto-complete tool, Codriver. The abstract and introduction were written with the help of ChatHorse and the entire chat history is available in inputs/llms/usage.txt.
+Aspects of the code and paper were written with the help of ChatGPT-4o. The entire chat history is available in other/llm_usage/usage.txt.
 
 ## Some checks
 

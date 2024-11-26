@@ -1,3 +1,12 @@
+#### Preamble ####
+# Purpose: Tests simulated NFL QBR data for Tom Brady and Patrick Mahomes
+# Author: Alexander Guarasci
+# Date: 26 November 2024
+# Contact: alexander.guarasci@mail.utoronto.ca
+# License: MIT
+# Pre-requisites: The `dplyr`, `arrow` and 'testthat' packages must be installed, and simulate_qbr_data.R must be run
+
+
 # Load necessary libraries
 library(dplyr)
 library(arrow)

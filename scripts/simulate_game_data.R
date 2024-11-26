@@ -1,12 +1,10 @@
 #### Preamble ####
-# Purpose: Simulates and saves a dataset containing NFL performance data
-# for Tom Brady and Patrick Mahomes, retaining only specified columns.
-# Author: Rohan Alexander
-# Date: 26 September 2024
-# Contact: rohan.alexander@utoronto.ca
+# Purpose: Simulates and saves a dataset containing NFL game data for Tom Brady and Patrick Mahomes
+# Author: Alexander Guarasci
+# Date: 26 November 2024
+# Contact: alexander.guarasci@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: The `tidyverse` and `arrow` packages must be installed.
-# Any other information needed? Make sure you are in the `starter_folder` rproj.
+# Pre-requisites: The `dplyr` and `arrow` packages must be installed.
 
 # Load necessary libraries
 library(dplyr)
