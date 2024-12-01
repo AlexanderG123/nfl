@@ -47,7 +47,7 @@ The data used in this analysis originates from nflverse [@citenflverse], a colle
 
 The analysis was conducted in R [@citeR], leveraging tools from the Tidyverse [@citetidyverse], Arrow [@citearrow], Knitr [@citeknitr], and Testthat [@citett] packages. The primary dataset included QB-specific data from every NFL game played since 2000, encompassing over 55 columns detailing various player performance metrics. Additional data sources were used for ESPN’s Quarterback Rating (QBR), which encapsulates QB efficiency across multiple dimensions of gameplay.
 
-The analysis focuses on comparing the careers of two of the greatest football players of all time: Tom Brady and Patrick Mahomes. Both players’ careers are completely represented in the dataset, allowing for an in-depth comparison of Mahomes’ trajectory against Brady’s completed career. To achieve this, the dataset was filtered to include only these two players, with irrelevant data removed. For example, receiving yards were excluded since quarterbacks rarely make receptions. The refined dataset highlights key metrics such as completions, attempts, passing yards, interceptions, fumbles, and a variety of quarterback rushing stats, which have become increasingly relevant in modern NFL play.
+The analysis focuses on comparing the careers of two of the greatest football players of all time: Tom Brady and Patrick Mahomes. Both players’ careers are completely represented in the dataset, allowing for an in-depth comparison of Mahomes’ trajectory against Brady’s completed career. To achieve this, the dataset was filtered to include only these two players, with irrelevant data removed. For example, receiving yards were excluded since quarterbacks rarely make receptions. The refined dataset highlights key metrics such as completions, attempts, passing yards, interceptions, and a variety of quarterback rushing stats, which have become increasingly relevant in modern NFL play.
 
 Additionally, a second dataset containing ESPN’s Quarterback Rating (QBR) metric was incorporated to analyze playoff performance across their careers. This dataset, also filtered to focus on Brady and Mahomes, provided season and postseason averages, though it lacked the granularity of the primary dataset. It served primarily during the exploratory phase to facilitate higher-level insights into what defines greatness in professional football.
 
@@ -268,16 +268,13 @@ We estimate $\beta_0$ and $\beta_j$ using Ordinary Least Squares (OLS) on Tom Br
 The predictors ($x_j$) included in the model are chosen based on their relevance to a quarterback's performance:
 
 1. **Passing Metrics**:  
-   - `completions`, `attempts`, `passing_yards`, `passing_tds`, `interceptions`, `passing_air_yards`.  
+   - `completions`, `attempts`, `passing_yards`, `passing_tds`, `interceptions`.  
    - These metrics directly influence a quarterback’s overall contribution to team success.
 
 2. **Rushing Metrics**:  
    - `carries`, `rushing_yards`, `rushing_tds`.  
    - While not the primary focus, rushing performance is an insightful metric for dual-threat quarterbacks like Mahomes.
 
-3. **Ball Security**:  
-   - `sack_fumbles`.  
-   - Turnovers are highly important in evaluating overall impact.
 
 These features ensure the model captures both primary and auxiliary aspects of quarterback performance.
 
@@ -354,8 +351,7 @@ mahomes_data <- read.csv(mahomes_predictions_path)
 
 # Columns to sum
 columns_to_sum <- c(
-  "completions", "attempts", "passing_yards", "passing_tds", "interceptions",
-  "sack_fumbles", "passing_air_yards", "carries", "rushing_yards", "rushing_tds"
+  "completions", "attempts", "passing_yards", "passing_tds", "interceptions", "carries", "rushing_yards", "rushing_tds"
 )
 
 # Calculate totals for Brady
@@ -380,8 +376,6 @@ final_table <- combined_stats %>%
     `Pass Yds` = passing_yards,
     `Pass TDs` = passing_tds,
     `INTs` = interceptions,
-    `Fumbles` = sack_fumbles,
-    `Air Yds` = passing_air_yards,
     `Carries` = carries,
     `Rush Yds` = rushing_yards,
     `Rush TDs` = rushing_tds
@@ -389,7 +383,7 @@ final_table <- combined_stats %>%
   mutate(across(where(is.numeric), round))
 
 # Generate the table using tinytable
-tt(final_table, width = 1.5) |> style_tt( fontsize = .5)
+tt(final_table, width = 1.5) |> style_tt( fontsize = 1)
 ```
 
 
@@ -435,20 +429,18 @@ final_table <- per_game_stats %>%
     `Pass Yds` = passing_yards,
     `Pass TDs` = passing_tds,
     `INTs` = interceptions,
-    `Fumbles` = sack_fumbles,
-    `Air Yds` = passing_air_yards,
     `Carries` = carries,
     `Rush Yds` = rushing_yards,
     `Rush TDs` = rushing_tds
   )
 
 # Generate the table using tinytable
-tt(final_table, width = 1.5) |> style_tt( fontsize = .5)
+tt(final_table, width = 1.5) |> style_tt( fontsize = 1)
 ```
 
 The analysis of per-game statistics shows a clear edge for Patrick Mahomes over Tom Brady across nearly every metric. Mahomes completes slightly more passes per game (23.94) than Brady (23.50), despite attempting a comparable number of throws (36.74 for Mahomes vs. 36.67 for Brady). This small difference results in a higher completion percentage for Mahomes at 65.17%, compared to Brady’s 64.08%, indicating a marginal but noteworthy advantage in passing efficiency. Mahomes also outpaces Brady in passing yards per game, averaging 276.38 to Brady’s 269.33, further emphasizing his ability to generate more offense through the air.
 
-In terms of scoring, Mahomes demonstrates a superior passing touchdown rate, averaging 2.04 touchdowns per game compared to Brady’s 1.94. Both players maintain an impressive level of ball security, with nearly identical interception rates per game (0.66), but Mahomes edges Brady in minimizing sack-related turnovers, with 0.27 sack fumbles per game versus Brady’s 0.30. This reflects Mahomes’ adaptability under pressure and his efficiency in avoiding costly mistakes.
+In terms of scoring, Mahomes demonstrates a superior passing touchdown rate, averaging 2.04 touchdowns per game compared to Brady’s 1.94. Both players maintain an impressive level of ball security, with nearly identical interception rates per game (0.66).
 
 The most significant disparity appears in rushing statistics, where Mahomes outshines Brady by a wide margin. Mahomes averages 10.13 rushing yards per game, more than triple Brady’s 3.30, and his higher number of carries per game (2.85 vs. 2.12) underscores his ability to contribute as a dual-threat quarterback. Furthermore, Mahomes’ rushing touchdown rate (0.11 per game) surpasses Brady’s 0.09, further illustrating his dynamic impact on the ground.
 
@@ -527,5 +519,3 @@ While observational data cannot establish causality, it offers insights into pat
 
 
 # References
-
-
