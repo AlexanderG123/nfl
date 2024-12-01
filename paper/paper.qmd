@@ -10,7 +10,7 @@ abstract: "This paper compares National Football League (NFL) quarterbacks Tom B
 format: 
   pdf: 
     fig-pos: "H"
-number-sections: false
+number-sections: true
 bibliography: references.bib
 ---
 ```{r}
@@ -35,7 +35,7 @@ To answer this question, this analysis draws on statistical data, examining past
 
 The findings reveal that Brady’s legacy is unequaled in its longevity and sheer accomplishment. While Mahomes’ career trajectory suggests he does have the potential to surpass Brady, it is highly unlikely that he does from a statistical standpoint. These insights are significant not only for appreciating their contributions to football but also for understanding the broader implications of what society values in its icons.
 
-The paper is structured as follows: the first section provides an explanation of the data used in this paper, what it shows and where it comes from. The second section discusses the model used to predict the future of Patrick Mahomes’ career. The third section shows the results of the model. The final section discusses the implication of the model as well as provides more insight into the two players’ legacies. 
+The paper is structured as follows: @sec-data provides an explanation of the data used in this paper, what it shows and where it comes from. @sec-model discusses the model used to predict the future of Patrick Mahomes’ career. @sec-results shows the results of the model. @sec-discussion discusses the implication of the model as well as provides more insight into the two players’ legacies. 
 
 
 
@@ -45,7 +45,7 @@ The paper is structured as follows: the first section provides an explanation of
 
 The data used in this analysis originates from nflverse [@citenflverse], a collection of packages tailored for NFL data. These packages aggregate statistics, player information and game results spanning several decades. For this paper, the focus was narrowed to quarterback (QB) performance data, specifically for Tom Brady and Patrick Mahomes.
 
-The analysis was conducted in R [@citeR], leveraging tools from the Tidyverse [@citetidyverse], Caret [@citecaret], Arrow [@citearrow], Knitr [@citeknitr], and Testthat [@citett] packages. The primary dataset included QB-specific data from every NFL game played since 2000, encompassing over 55 columns detailing various player performance metrics. Additional data sources were used for ESPN’s Quarterback Rating (QBR), which encapsulates QB efficiency across multiple dimensions of gameplay.
+The analysis was conducted in R [@citeR], leveraging tools from the Tidyverse [@citetidyverse], Caret [@citecaret], Arrow [@citearrow], Knitr [@citeknitr], and Testthat [@citett] packages. The code was styled using [@citestyler] The primary dataset included QB-specific data from every NFL game played since 2000, encompassing over 55 columns detailing various player performance metrics. Additional data sources were used for ESPN’s Quarterback Rating (QBR), which encapsulates QB efficiency across multiple dimensions of gameplay.
 
 The analysis focuses on comparing the careers of two of the greatest football players of all time: Tom Brady and Patrick Mahomes. Both players’ careers are completely represented in the dataset, allowing for an in-depth comparison of Mahomes’ trajectory against Brady’s completed career. To achieve this, the dataset was filtered to include only these two players, with irrelevant data removed. For example, receiving yards were excluded since quarterbacks rarely make receptions. The refined dataset highlights key metrics such as completions, attempts, passing yards, interceptions, and a variety of quarterback rushing stats, which have become increasingly relevant in modern NFL play.
 
@@ -79,7 +79,7 @@ The most complicated variable used in the analysis is ESPN QBR. This is a stat t
 
 # Load and filter player game data
 player_data <- read_parquet("~/nfl/data/analysis_data/game_stats/merged_player_game.parquet")
-player_filtered <- player_data %>% 
+player_filtered <- player_data %>%
   filter(player_display_name %in% c("Tom Brady", "Patrick Mahomes"))
 
 # Total Passing Yards Plot
@@ -91,15 +91,14 @@ player_filtered %>%
   ) %>%
   ggplot(aes(x = player_display_name, y = total_passing_yards, fill = player_display_name)) +
   geom_bar(stat = "identity") +
-  scale_fill_manual(values = c("red","blue")) +
+  scale_fill_manual(values = c("red", "blue")) +
   theme_minimal() +
   labs(
     title = "Total Passing Yards: Mahomes vs Brady",
     x = "Player",
     y = "Passing Yards",
-    fill = ''
+    fill = ""
   )
-
 ```
 [@fig-total-passing-yards] provides a comprehensive overview of the total passing yards achieved by Tom Brady and Patrick Mahomes. Tom Brady, with 102,614 total passing yards (including playoffs), significantly outpaces Patrick Mahomes, who has 35,963 yards as of November 21, 2024. This disparity is largely due to Brady’s 381 career games compared to Mahomes’ 124 games. What stands out is Brady’s ability to maintain high passing numbers well into the later stages of his career, demonstrating longevity and consistency. On the other hand, Mahomes’ current total is remarkable given the shorter duration of his career, highlighting his rapid ascent and dominance in the modern NFL.
 
@@ -119,13 +118,13 @@ player_filtered %>%
   ) %>%
   ggplot(aes(x = player_display_name, y = total_rushing_yards, fill = player_display_name)) +
   geom_bar(stat = "identity") +
-  scale_fill_manual(values = c("red","blue")) +
+  scale_fill_manual(values = c("red", "blue")) +
   theme_minimal() +
   labs(
     title = "Total Rushing Yards: Mahomes vs Brady",
     x = "Player",
     y = "Rushing Yards",
-    fill = ''
+    fill = ""
   )
 ```
 [@fig-total-rushing-yards] shows an interesting contrast in rushing yards between the two quarterbacks. Despite playing over three times as many games as Mahomes, Tom Brady falls significantly short, with Mahomes amassing more than twice as many rushing yards. This reflects a broader evolution in the NFL, where modern quarterbacks are often required to be dual threats, capable of both passing and running effectively. Players like Mahomes exemplify this shift, adapting to the athletic demands of today’s game, unlike Brady, who represents the traditional pocket-passing archetype of previous eras.
@@ -153,7 +152,6 @@ player_data %>%
     y = "Total Passing Touchdowns",
     colour = "Player"
   )
-
 ```
 [@fig-passing-tds-per-season] illustrates the passing touchdowns per season for both players. Brady’s peak in 2007 with the New England Patriots—arguably the most dominant offense in NFL history—stands out prominently. Mahomes’ first season as a starter in 2018 is also noteworthy, with 53 touchdowns and just 12 interceptions. This extraordinary season set the stage for Mahomes’ rise as one of the game’s best quarterbacks, though it ultimately ended in a playoff loss to Brady. The graph underscores how both players have reached incredible heights in their respective careers.
 ```{r}
@@ -166,7 +164,7 @@ player_data %>%
 
 player_data %>%
   ggplot(aes(x = player_display_name, y = passing_yards, fill = player_display_name)) +
-  geom_violin(alpha = 0.7,trim = FALSE) +
+  geom_violin(alpha = 0.7, trim = FALSE) +
   theme_minimal() +
   scale_fill_manual(values = c("Mahomes" = "blue", "Brady" = "red")) +
   labs(
@@ -220,7 +218,7 @@ library(dplyr)
 
 # Load and filter QBR data
 qbr_data <- read_parquet("~/nfl/data/analysis_data/advanced_stats/merged_qbr.parquet")
-qbr_filtered <- qbr_data %>% 
+qbr_filtered <- qbr_data %>%
   filter(name_display %in% c("Tom Brady", "Patrick Mahomes"))
 
 # QBR Comparison Plot
@@ -231,7 +229,7 @@ ggplot(qbr_filtered, aes(x = season_type, y = qbr_total, fill = name_display)) +
     title = "QBR Comparison by Season Type (Regular vs. Playoffs)",
     x = "",
     y = "QBR",
-    fill = 'Player'
+    fill = "Player"
   )
 ```
 
@@ -239,7 +237,7 @@ Although the previous graphs were useful in getting a picture of the two players
 
 
 
-# Model
+# Model {#sec-model}
 
 ## Overview
 
@@ -251,15 +249,15 @@ The dataset used in this analysis is a combination of game-level statistics for 
 
 - **completions**: The number of successful passes thrown.
 - **attempts**: The total number of pass attempts.
-- **passing_yards**: The total yards gained from passing attempts.
-- **passing_tds**: The total number of passing touchdowns.
+- **passing yards**: The total yards gained from passing attempts.
+- **passing tds**: The total number of passing touchdowns.
 - **interceptions**: The total number of interceptions thrown.
 - **carries**: The number of rushing attempts.
-- **rushing_yards**: The total rushing yards gained.
-- **rushing_tds**: The total number of rushing touchdowns.
+- **rushing yards**: The total rushing yards gained.
+- **rushing tds**: The total number of rushing touchdowns.
 
 
-The model used in this analysis is a multiple linear regression model. We choose linear regression because it is a simple yet effective approach for modeling continuous outcomes and provides easy interpretability. 
+The model used in this analysis is a multiple linear regression model (@eq-lm). We choose linear regression because it is a simple yet effective approach for modeling continuous outcomes and provides easy interpretability. 
 
 ### Equation for the Model
 
@@ -271,7 +269,7 @@ The general form of the multiple linear regression model is:
 
 $$
 Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_n X_n + \epsilon
-$$
+$$ {#eq-lm}
 
 Where:
 
@@ -290,11 +288,12 @@ We trained the model using data from Tom Brady's career, specifically using the 
 3. **Training/Test Split**: The dataset was split into training (80%) and testing (20%) sets to evaluate model performance.
 4. **Prediction**: The trained model was used to predict Mahomes' statistics for the next 200 games.
 
-We also calculated the Root Mean Squared Error (RMSE) for each predicted variable in the test set as an evaluation metric. RMSE is a commonly used metric to measure the accuracy of regression models, and it is calculated as:
+We also calculated the Root Mean Squared Error (RMSE) for each predicted variable in the test set as an evaluation metric. RMSE (@eq-rmse) is a commonly used metric to measure the accuracy of regression models, and it is calculated as:
 
 $$
 RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
-$$
+$$ {#eq-rmse}
+
 
 Where:
 
@@ -332,18 +331,32 @@ These RMSE values indicate that the model has some level of predictive accuracy 
 
 3. **Final Choice**:  
    - Linear regression was chosen for its balance of simplicity, interpretability, and performance.
+   
+## Assumptions and Limitations
 
-## Limitiations
+The model makes several key assumptions that are important for interpreting the predictions:
 
-While the RMSE values suggest some error in the predictions, this is expected due to the limited amount of available data. The performance of the model could likely improve with a larger and more balanced dataset that includes a broader range of game conditions. Additionally, while we used Tom Brady’s statistics as a proxy for Mahomes, differences in their playing styles and team dynamics could also contribute to the prediction error.
+1. **Similarity of Player Performance**: The model assumes that Patrick Mahomes' future performance will be similar to Tom Brady’s past performance, using Brady's career as a proxy. This assumption may not hold as Mahomes' playing style and team dynamics significantly differ from Brady's.
 
-The linear regression model assumes that the relationships between the predictors and the outcomes are linear, which may not always be the case in real-world scenarios. Further exploration of alternative models, such as non-linear regression or machine learning techniques like decision trees, could be considered for improving predictions.
+2. **Linear Relationships**: The model assumes that the relationships between the predictors (game statistics such as completions, passing yards, etc.) and the outcomes are linear. This may not always be the case in practice, as player performance could be influenced by more complex, non-linear interactions.
+
+3. **Constant Game Conditions**: The model assumes that game conditions, including factors such as opposing defenses and weather conditions, remain relatively consistent over time. However, these factors could vary and influence player performance in ways not captured by the model.
+
+4. **Prediction for 200 Games**: The model assumes that Mahomes' performance will follow a similar trajectory over the next 200 games as it has in the past. This assumption may not account for potential career milestones, injuries, or other events that could disrupt this pattern.
+
+5. **Uniform Dataset**: The model assumes that the dataset of Tom Brady’s career is representative of typical game conditions and does not contain significant biases or outliers that would skew the predictions.
+
+Ultimately, the model may be appropriate in scenarios where general trends in quarterback performance are needed for broad projections, such as for media analysis or high-level discussions of player comparisons. It can offer insights into how Mahomes might perform in a typical game based on historical data from a similar elite quarterback. This can be useful for estimating the overall trajectory of Mahomes’ career and projecting his future career stats across a large sample of games.
+
+However, the model may not be appropriate for precise, game-by-game predictions, especially when specific game conditions or player-specific factors (such as injury status or team dynamics) are likely to vary. For example, using this model to predict Mahomes’ performance in a critical playoff game or during a season affected by significant roster changes could lead to inaccurate or misleading conclusions. Additionally, the linear nature of the model means it may fail to account for more complex interactions that influence a quarterback’s performance in real-world scenarios.
+
+In summary, while the model provides a reasonable estimation of Mahomes’ future statistics based on Brady’s historical data, it should be used cautiously in contexts where precision is critical or where Mahomes’ unique playing style and career circumstances may diverge from Brady’s past performance.
 
 ## Conclusion
 
 This model provides a reasonable estimate of Patrick Mahomes’ lifetime career statistics over 200 additional games based on Tom Brady’s historical data. Although the RMSE values suggest room for improvement, the model serves as a useful starting point for projecting Mahomes’ future performance. Future work could include expanding the dataset, exploring non-linear modeling techniques, and accounting for player-specific factors that might differ between Brady and Mahomes.
 
-# Results
+# Results {#sec-results}
  [@tbl-brady-mahomes-career-stats] compares Tom Brady’s career statistics with Patrick Mahomes’ projected lifetime statistics. Tom Brady, with 8,954 completions and 13,973 attempts, has significantly more career completions and attempts than Mahomes, who is projected to finish with 7,763 completions and 11,925 attempts. Brady’s total passing yards of 102,616 far exceed Mahomes’ projected 89,160, highlighting Brady’s longevity and consistent performance. Similarly, Brady has thrown 738 passing touchdowns, whereas Mahomes is projected to finish with 654. Brady also has more interceptions (252 compared to Mahomes’ 216). These differences underscore Brady’s long career and high volume of passing, which has contributed to his unrivaled career achievements.
 
 ```{r}
@@ -400,7 +413,7 @@ final_table <- combined_stats %>%
   mutate(across(where(is.numeric), round))
 
 # Generate the table using tinytable
-tt(final_table, width = 1.5) |> style_tt( fontsize = 1)
+tt(final_table, width = 1.5) |> style_tt(fontsize = 1)
 ```
 
 
@@ -452,7 +465,7 @@ final_table <- per_game_stats %>%
   )
 
 # Generate the table using tinytable
-tt(final_table, width = 1.5) |> style_tt( fontsize = 1)
+tt(final_table, width = 1.5) |> style_tt(fontsize = 1)
 ```
 
 The analysis of per-game statistics shows a clear edge for Patrick Mahomes over Tom Brady across nearly every metric. Mahomes completes slightly more passes per game (23.96) than Brady (23.50), despite attempting a comparable number of throws (36.81 for Mahomes vs. 36.67 for Brady). This small difference results in a higher completion percentage (defined as the number of completions divided by the number of attempts) for Mahomes at 65.10%, compared to Brady’s 64.08%, indicating a marginal but noteworthy advantage in passing efficiency. Mahomes also outpaces Brady in passing yards per game, averaging 275.18 to Brady’s 269.33, further emphasizing his ability to generate more offense through the air.
@@ -463,7 +476,7 @@ The most significant disparity appears in rushing statistics, where Mahomes outs
 
 These results suggest that Mahomes not only matches but surpasses Brady’s per-game contributions in every key category, showcasing his all-around ability as a quarterback. The consistent superiority in passing, rushing, and overall efficiency highlights Mahomes’ potential to redefine expectations for quarterback performance in the NFL.
 
-# Discussion
+# Discussion {#sec-discussion}
 
 ## What is done in this paper? 
 This paper provides a rigorous statistical comparison of Tom Brady and Patrick Mahomes to evaluate whether Mahomes could eventually surpass Brady as the greatest quarterback of all time (GOAT). Through comprehensive data analysis, the study examines key performance metrics across both players’ careers, incorporating traditional and more high-level statistics, including ESPN’s Total Quarterback Rating (QBR). Additionally, the paper develops a predictive model to estimate Mahomes’ career trajectory if he plays 200 more games. By combining historical data, exploratory visualization, and predictive modeling, the paper offers insights into the evolving standards of quarterback greatness in the NFL.
@@ -536,6 +549,3 @@ While observational data cannot establish causality, it offers insights into pat
 
 
 # References
-
-
-
