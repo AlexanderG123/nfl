@@ -27,13 +27,13 @@ library(arrow)
 
 What defines greatness in professional sports? The question has captivated fans, analysts, and historians alike, sparking countless debates that go beyond numbers and records. In football, this discussion often converges on the legacies of two extraordinary quarterbacks: Tom Brady and Patrick Mahomes. Brady’s career, spanning more than two decades, includes seven Super Bowl victories and an unmatched reputation for clutch performances. Mahomes, on the other hand, has quickly ascended as the face of a new generation, dazzling fans with his athleticism, creativity, and championship pedigree. This paper investigates the evolving narrative of greatness in the NFL through a detailed comparison of these two legends, exploring what their careers reveal about the broader concept of sports excellence.
 
-While statistical achievements and accolades are critical, they alone cannot encapsulate the essence of greatness. Both Brady and Mahomes boast extraordinary numbers, yet their legacies diverge in ways that reflect deeper, qualitative factors such as resilience, leadership, and the ability to deliver in high-pressure moments. 
+While statistical achievements and accolades are important, they alone cannot encapsulate the essence of greatness. Both Brady and Mahomes boast extraordinary numbers, yet their legacies diverge in ways that reflect deeper, qualitative factors such as resilience, leadership, and the ability to deliver in high-pressure moments. 
 
 This paper ultimately aims to answer the question, can Patrick Mahomes usurp Tom Brady as the greatest football player of all time.
 
 To answer this question, this analysis draws on statistical data, examining past performance, and broader career trajectories. It evaluates what each quarterback has achieved to date and aims to project Patrick Mahomes’ future.
 
-The findings reveal that Brady’s legacy is unparalleled in its longevity and sheer accomplishment. While Mahomes’ career trajectory suggests he does have the potential to surpass Brady, it is highly unlikely that he does from a statistical standpoint. These insights are significant not only for appreciating their contributions to football but also for understanding the broader implications of what society values in its icons.
+The findings reveal that Brady’s legacy is unequaled in its longevity and sheer accomplishment. While Mahomes’ career trajectory suggests he does have the potential to surpass Brady, it is highly unlikely that he does from a statistical standpoint. These insights are significant not only for appreciating their contributions to football but also for understanding the broader implications of what society values in its icons.
 
 The paper is structured as follows: the first section provides an explanation of the data used in this paper, what it shows and where it comes from. The second section discusses the model used to predict the future of Patrick Mahomes’ career. The third section shows the results of the model. The final section discusses the implication of the model as well as provides more insight into the two players’ legacies. 
 
@@ -43,28 +43,28 @@ The paper is structured as follows: the first section provides an explanation of
 
 ## Overview
 
-The data used in this analysis originates from nflverse [@citenflverse], a comprehensive collection of packages tailored for NFL data. These packages aggregate statistics, player information and game results spanning several decades. For this paper, the focus was narrowed to quarterback (QB) performance data, specifically for Tom Brady and Patrick Mahomes.
+The data used in this analysis originates from nflverse [@citenflverse], a collection of packages tailored for NFL data. These packages aggregate statistics, player information and game results spanning several decades. For this paper, the focus was narrowed to quarterback (QB) performance data, specifically for Tom Brady and Patrick Mahomes.
 
-The analysis was conducted in R [@citeR], leveraging tools from the Tidyverse [@citetidyverse], Arrow [@citearrow], Knitr [@citeknitr], Testthat [@citett] packages. The primary dataset included QB-specific data from every NFL game played since 2000, encompassing over 55 columns detailing various player performance metrics. Additional data sources were used for advanced metrics, notably ESPN’s Quarterback Rating (QBR), which encapsulates QB efficiency across multiple dimensions of gameplay.
+The analysis was conducted in R [@citeR], leveraging tools from the Tidyverse [@citetidyverse], Arrow [@citearrow], Knitr [@citeknitr], Testthat [@citett] packages. The primary dataset included QB-specific data from every NFL game played since 2000, encompassing over 55 columns detailing various player performance metrics. Additional data sources were used for ESPN’s Quarterback Rating (QBR), which encapsulates QB efficiency across multiple dimensions of gameplay.
 
-The analysis focuses on comparing the careers of two of the greatest football players of all time: Tom Brady and Patrick Mahomes. Both players’ careers are comprehensively represented in the dataset, allowing for an in-depth comparison of Mahomes’ trajectory against Brady’s completed career. To achieve this, the dataset was filtered to include only these two players, with irrelevant data removed. For example, receiving yards were excluded since quarterbacks rarely make receptions. The refined dataset highlights key metrics such as completions, attempts, passing yards, interceptions, fumbles, and a variety of quarterback rushing stats, which have become increasingly relevant in modern NFL play.
+The analysis focuses on comparing the careers of two of the greatest football players of all time: Tom Brady and Patrick Mahomes. Both players’ careers are completely represented in the dataset, allowing for an in-depth comparison of Mahomes’ trajectory against Brady’s completed career. To achieve this, the dataset was filtered to include only these two players, with irrelevant data removed. For example, receiving yards were excluded since quarterbacks rarely make receptions. The refined dataset highlights key metrics such as completions, attempts, passing yards, interceptions, fumbles, and a variety of quarterback rushing stats, which have become increasingly relevant in modern NFL play.
 
-Additionally, a second dataset containing ESPN’s advanced Quarterback Rating (QBR) metric was incorporated to analyze playoff performance across their careers. This dataset, also filtered to focus on Brady and Mahomes, provided season and postseason averages, though it lacked the granularity of the primary dataset. It served primarily during the exploratory phase to facilitate higher-level insights into what defines greatness in professional football.
+Additionally, a second dataset containing ESPN’s Quarterback Rating (QBR) metric was incorporated to analyze playoff performance across their careers. This dataset, also filtered to focus on Brady and Mahomes, provided season and postseason averages, though it lacked the granularity of the primary dataset. It served primarily during the exploratory phase to facilitate higher-level insights into what defines greatness in professional football.
 
 ## Why This Dataset?
-This dataset was selected for its granularity and comprehensive scope, capturing both raw and advanced metrics for NFL quarterbacks. While alternative datasets could have been used, nflverse was chosen for its open accessibility, ease of integration with R, and the breadth of historical data. The inclusion of QBR data, although less granular, provided a complimentary high-level view of player performance in both regular season and playoff contexts.
+This dataset was selected for its granularity and scope, capturing raw metrics for NFL quarterbacks. While alternative datasets could have been used, nflverse was chosen for its open accessibility, ease of integration with R, and the breadth of historical data. The inclusion of QBR data, although less granular, provided a complimentary high-level view of player performance in both regular season and playoff contexts.
 	
 ## Measurement
 The process of translating on-field football events into measurable data is fraught with complexity and subjectivity. A key example is the metric of completions, which records whether or not a quarterback’s pass was caught. While this appears straightforward, the determination of a catch versus an incompletion is not always clear-cut. Referee rulings can occasionally be disputed, and the decision often hinges on nuanced interpretations of control, position, and timing. As a result, the recorded data reflects not just the physical outcome of the play but also the subjective judgment of officials, introducing an inherent layer of uncertainty into the dataset.
 
-Another critical element of football data collection lies in the placement of the ball after a play. Typically, a quarterback throws the ball, it is caught by a receiver, and the play concludes when the receiver either goes out of bounds or is tackled. At this point, referees must estimate the ball’s precise location to mark the spot of forward progress or the boundary exit. While this measurement is essential for maintaining game flow and accuracy, it relies heavily on visual judgment and is thus more art than science. Although teams may challenge the spot in crucial situations, most ball placements remain subjective, resulting in potential variability in the dataset.
+Another important element of football data collection lies in the placement of the ball after a play. Typically, a quarterback throws the ball, it is caught by a receiver, and the play concludes when the receiver either goes out of bounds or is tackled. At this point, referees must estimate the ball’s precise location to mark the spot of forward progress or the boundary exit. While this measurement is essential for maintaining game flow and accuracy, it relies heavily on visual judgment and is thus more art than science. Although teams may challenge the spot in pivotal situations, most ball placements remain subjective, resulting in potential variability in the dataset.
 
-These nuances highlight the challenges inherent in translating the dynamic, real-time events of a football game into static data entries. The dataset used in this analysis reflects not only the physical phenomena observed on the field but also the interpretive decisions made by officials, which can influence critical measures like completions and ball placement. This underscores the importance of considering the limitations and subjectivity embedded within the data when drawing conclusions about player performance and game outcomes.
+These nuances highlight the challenges inherent in translating the dynamic, real-time events of a football game into static data entries. The dataset used in this analysis reflects not only the physical phenomena observed on the field but also the interpretive decisions made by officials, which can influence measures like completions and ball placement. This underscores the importance of considering the limitations and subjectivity embedded within the data when drawing conclusions about player performance and game outcomes.
 
 ## Variables of Interest
 Most of the variables used in this analysis are relatively straight forward. Passing yards is the vertical distance a passing play gains. For example, if a quarterback throws a pass and the receiver catches 10 yards down the field and runs for another 10 yards before being tackled or going out of bounds, that will count as 20 passing yards for the Quarterback. Rushing yards are the number of yards a player runs with the ball past the line of scrimmage - if the ball is caught as a pass, it does not count towards rushing yards. Passing touchdowns are simply a passing play that turns into a touchdown. Interceptions are passes made by a quarterback and caught by the other team. 
 
-The most nuanced variable used in the analysis is ESPN QBR. This is a stat that aims to be all encompassing with regard to how a quarterback is playing. It is a scale from 0-100 with 50 being average. ESPN says "it incorporates all of a quarterback’s contributions to winning, including how he impacts the game on passes, rushes, turnovers and penalties. Also, since QBR is built from the play level, it accounts for a team’s level of success or failure on every play to provide the proper context and then allocates credit to the quarterback and his teammate to produce a clearer measure of quarterback efficiency." Overall, it aims to give an overview of how well a quarterback played.
+The most nuanced variable used in the analysis is ESPN QBR. This is a stat that aims explain the totality of how a quarterback is playing. It is a scale from 0-100 with 50 being average. ESPN says "it incorporates all of a quarterback’s contributions to winning, including how he impacts the game on passes, rushes, turnovers and penalties. Also, since QBR is built from the play level, it accounts for a team’s level of success or failure on every play to provide the proper context and then allocates credit to the quarterback and his teammate to produce a clearer measure of quarterback efficiency." Overall, it aims to give an overview of how well a quarterback played.
 
 ## Data Visualization
 
@@ -126,7 +126,7 @@ player_filtered %>%
     fill = ''
   )
 ```
-[@fig-total-rushing-yards] reveals an interesting contrast in rushing yards between the two quarterbacks. Despite playing over three times as many games as Mahomes, Tom Brady falls significantly short, with Mahomes amassing more than twice as many rushing yards. This reflects a broader evolution in the NFL, where modern quarterbacks are often required to be dual threats, capable of both passing and running effectively. Players like Mahomes exemplify this shift, adapting to the athletic demands of today’s game, unlike Brady, who represents the traditional pocket-passing archetype of previous eras.
+[@fig-total-rushing-yards] shows an interesting contrast in rushing yards between the two quarterbacks. Despite playing over three times as many games as Mahomes, Tom Brady falls significantly short, with Mahomes amassing more than twice as many rushing yards. This reflects a broader evolution in the NFL, where modern quarterbacks are often required to be dual threats, capable of both passing and running effectively. Players like Mahomes exemplify this shift, adapting to the athletic demands of today’s game, unlike Brady, who represents the traditional pocket-passing archetype of previous eras.
 
 ```{r}
 #| label: fig-passing-tds-per-season
@@ -204,7 +204,7 @@ player_data %>%
     color = "Player"
   )
 ```
-[@fig-interceptions-per-season] highlights the number of interceptions thrown by each player per season. Interceptions are critical errors that often stem from poor decision-making or miscommunication. This graph provides insight into the players’ decision-making abilities and their capacity to minimize costly turnovers. 
+[@fig-interceptions-per-season] highlights the number of interceptions thrown by each player per season. Interceptions are significant errors that often stem from poor decision-making or miscommunication. This graph provides insight into the players’ decision-making abilities and their capacity to minimize costly turnovers. 
 ```{r}
 #| label: fig-qbr-comparison
 #| fig-cap: QBR Comparison by Season Type (Regular vs. Playoffs) for Brady and Mahomes
@@ -241,7 +241,7 @@ Although the previous graphs were useful in getting a picture of the two players
 
 ## Model Overview
 
-We designed a predictive model to estimate Patrick Mahomes' cumulative career statistics over an additional 200 games. The model leverages historical game data from Tom Brady as a benchmark and Patrick Mahomes' existing career data to generate predictions for key performance metrics.
+We designed a predictive model to estimate Patrick Mahomes' cumulative career statistics over an additional 200 games. The model is trained on historical game data from Tom Brady as a benchmark and Patrick Mahomes' existing career data to generate predictions for key performance metrics.
 
 ### Mathematical Notation
 
@@ -271,11 +271,11 @@ The predictors ($x_j$) included in the model are chosen based on their relevance
 
 2. **Rushing Metrics**:  
    - `carries`, `rushing_yards`, `rushing_tds`.  
-   - While not the primary focus, rushing performance is crucial for dual-threat quarterbacks like Mahomes.
+   - While not the primary focus, rushing performance is an insightful metric for dual-threat quarterbacks like Mahomes.
 
 3. **Ball Security**:  
    - `sack_fumbles`.  
-   - Turnovers are critical in evaluating overall impact.
+   - Turnovers are highly important in evaluating overall impact.
 
 These features ensure the model captures both primary and auxiliary aspects of quarterback performance.
 
@@ -328,7 +328,7 @@ The model was implemented using R, leveraging the `lm` function from the `stats`
 The linear regression model provides a robust yet interpretable framework for predicting Mahomes' lifetime stats. It is grounded in historical data and validated through residual analysis and error metrics. While limitations exist, the model effectively captures the essence of Mahomes' expected performance trajectory based on Brady's historical patterns.
 
 # Results
- [@tbl-brady-mahomes-career-stats] compares Tom Brady’s career statistics with Patrick Mahomes’ projected lifetime statistics. Tom Brady, with 8,954 completions and 13,973 attempts, has significantly more career completions and attempts than Mahomes, who is projected to finish with 7,756.72 completions and 11,902.61 attempts. Brady’s total passing yards of 102,616 far exceed Mahomes’ projected 89,548.38, highlighting Brady’s longevity and consistent performance. Similarly, Brady has thrown 738 passing touchdowns, whereas Mahomes is projected to finish with 660.38. Brady also has more interceptions (252 compared to Mahomes’ 213.59). These differences underscore Brady’s long career and high volume of passing, which has contributed to his unparalleled career achievements.
+ [@tbl-brady-mahomes-career-stats] compares Tom Brady’s career statistics with Patrick Mahomes’ projected lifetime statistics. Tom Brady, with 8,954 completions and 13,973 attempts, has significantly more career completions and attempts than Mahomes, who is projected to finish with 7,756.72 completions and 11,902.61 attempts. Brady’s total passing yards of 102,616 far exceed Mahomes’ projected 89,548.38, highlighting Brady’s longevity and consistent performance. Similarly, Brady has thrown 738 passing touchdowns, whereas Mahomes is projected to finish with 660.38. Brady also has more interceptions (252 compared to Mahomes’ 213.59). These differences underscore Brady’s long career and high volume of passing, which has contributed to his unrivaled career achievements.
 
 ```{r}
 #| label: tbl-brady-mahomes-career-stats
@@ -444,7 +444,7 @@ final_table <- per_game_stats %>%
 tt(final_table, width = 1.5) |> style_tt( fontsize = .5)
 ```
 
-The analysis of per-game statistics reveals a clear edge for Patrick Mahomes over Tom Brady across nearly every metric. Mahomes completes slightly more passes per game (23.94) than Brady (23.50), despite attempting a comparable number of throws (36.74 for Mahomes vs. 36.67 for Brady). This small difference results in a higher completion percentage for Mahomes at 65.17%, compared to Brady’s 64.08%, indicating a marginal but noteworthy advantage in passing efficiency. Mahomes also outpaces Brady in passing yards per game, averaging 276.38 to Brady’s 269.33, further emphasizing his ability to generate more offense through the air.
+The analysis of per-game statistics shows a clear edge for Patrick Mahomes over Tom Brady across nearly every metric. Mahomes completes slightly more passes per game (23.94) than Brady (23.50), despite attempting a comparable number of throws (36.74 for Mahomes vs. 36.67 for Brady). This small difference results in a higher completion percentage for Mahomes at 65.17%, compared to Brady’s 64.08%, indicating a marginal but noteworthy advantage in passing efficiency. Mahomes also outpaces Brady in passing yards per game, averaging 276.38 to Brady’s 269.33, further emphasizing his ability to generate more offense through the air.
 
 In terms of scoring, Mahomes demonstrates a superior passing touchdown rate, averaging 2.04 touchdowns per game compared to Brady’s 1.94. Both players maintain an impressive level of ball security, with nearly identical interception rates per game (0.66), but Mahomes edges Brady in minimizing sack-related turnovers, with 0.27 sack fumbles per game versus Brady’s 0.30. This reflects Mahomes’ adaptability under pressure and his efficiency in avoiding costly mistakes.
 
@@ -455,30 +455,30 @@ These results suggest that Mahomes not only matches but surpasses Brady’s per-
 # Discussion
 
 ## What is done in this paper? 
-This paper provides a rigorous statistical comparison of Tom Brady and Patrick Mahomes to evaluate whether Mahomes could eventually surpass Brady as the greatest quarterback of all time (GOAT). Through comprehensive data analysis, the study examines key performance metrics across both players’ careers, incorporating traditional and advanced statistics, including ESPN’s Total Quarterback Rating (QBR). Additionally, the paper develops a predictive model to estimate Mahomes’ career trajectory if he plays 200 more games. By combining historical data, exploratory visualization, and predictive modeling, the paper offers insights into the evolving standards of quarterback greatness in the NFL.
+This paper provides a rigorous statistical comparison of Tom Brady and Patrick Mahomes to evaluate whether Mahomes could eventually surpass Brady as the greatest quarterback of all time (GOAT). Through comprehensive data analysis, the study examines key performance metrics across both players’ careers, incorporating traditional and more high-level statistics, including ESPN’s Total Quarterback Rating (QBR). Additionally, the paper develops a predictive model to estimate Mahomes’ career trajectory if he plays 200 more games. By combining historical data, exploratory visualization, and predictive modeling, the paper offers insights into the evolving standards of quarterback greatness in the NFL.
 
 
 ## What is something that we learn about the world? 
 One significant insight from this paper is the impact of career longevity on perceptions of greatness. Tom Brady’s career, spanning over two decades, showcases not only impressive cumulative statistics but also a sustained level of excellence, particularly in high-stakes post-season environments. This longevity has set an unprecedented benchmark for future players. In contrast, Patrick Mahomes, despite a much shorter career, demonstrates a rapid accumulation of achievements, emphasizing efficiency and adaptability to the modern NFL. This analysis highlights how differing career arcs can define greatness and challenges the traditional emphasis on cumulative statistics alone. The reality of the situation is, you need to play a lot of football to win seven Super Bowls, and the nature of the sport makes it really difficult to assume a player will even be in the league five years from now and even more difficult to assume that they will have any form of continued success over this period. 
 
 ## What is something else that we learn about the world? 
-Greatness in sports, especially in the context of legendary quarterbacks like Tom Brady and Patrick Mahomes, cannot be boiled down to statistics alone. While both players have put up astonishing numbers throughout their careers, attempting to compare them purely through stats is an oversimplification of their legacies. Statistics, while important, fail to account for the intangibles—the ability to perform under pressure, the knack for leading a team to victory in critical moments, and the sheer will to win when it matters most.
+Greatness in sports, especially in the context of legendary quarterbacks like Tom Brady and Patrick Mahomes, cannot be boiled down to statistics alone. While both players have put up astonishing numbers throughout their careers, attempting to compare them purely through stats is an oversimplification of their legacies. Statistics, while important, fail to account for the intangibles—the ability to perform under pressure, the knack for leading a team to victory in clutch moments, and the sheer will to win when it matters most.
 
-When evaluating greatness, Super Bowl victories tend to stand as the ultimate benchmark, and here lies the defining gap between Brady and Mahomes. Tom Brady has set an unparalleled standard with seven Super Bowl wins, a number that remains a daunting goal for any quarterback to reach. Mahomes, as brilliant as he has been in his career so far, still has a long way to go in this regard. With three Super Bowl wins to his name, he would need four more championships just to tie Brady’s record—an extraordinary feat that would require sustained excellence over many years.
+When evaluating greatness, Super Bowl victories tend to stand as the ultimate benchmark, and here lies the defining gap between Brady and Mahomes. Tom Brady has set an unprecedented standard with seven Super Bowl wins, a number that remains a daunting goal for any quarterback to reach. Mahomes, as brilliant as he has been in his career so far, still has a long way to go in this regard. With three Super Bowl wins to his name, he would need four more championships just to tie Brady’s record—an extraordinary feat that would require sustained excellence over many years.
 
 Adding to Brady’s case is his direct record against Mahomes in the playoffs. The two have faced off twice in the playoffs, and on both occasions, Brady emerged victorious. The first was in the 2018 AFC Championship game, a thrilling overtime battle that ended with Brady’s Patriots edging out Mahomes’ Chiefs. The second, and perhaps more significant, was in Super Bowl LV, where Brady’s Buccaneers decisively defeated Mahomes and the Chiefs, cementing Brady’s legacy as the ultimate competitor on the biggest stage.
 
 However, Mahomes’ career is still young, and his playoff track record so far is nothing short of remarkable. Aside from the two playoff losses to Brady, Mahomes has only lost one other postseason game. In fact, he has never been eliminated from contention before reaching the AFC Championship, a testament to his dominance and consistency. His playoff record of 15-3 is astounding and reflects a level of performance that no other quarterback in history has ever matched.
 
-This also underscores a critical point about Mahomes: his ability to consistently elevate his game when the stakes are highest. Winning playoff games is no small feat, yet Mahomes has made it look routine, guiding his team deep into the postseason year after year. His style of play—combining pinpoint accuracy, athleticism, and creativity—has redefined the quarterback position and captivated fans and analysts alike.
+This also highlights another point about Mahomes: his ability to consistently elevate his game when the stakes are highest. Winning playoff games is no small feat, yet Mahomes has made it look routine, guiding his team deep into the postseason year after year. His style of play—combining pinpoint accuracy, athleticism, and creativity—has redefined the quarterback position and captivated fans and analysts alike.
 
 Ultimately, while Brady’s resume sets the gold standard for greatness, Mahomes is building a legacy that could rival it in time. For now, Brady’s longevity, unmatched playoff success, and head-to-head victories give him the edge in the GOAT debate. But Mahomes’ trajectory, both statistically and in terms of team success, suggests that he could one day close the gap. What we learn about the world through their stories is that greatness is not about one-dimensional measures like stats—it’s about how athletes respond to challenges, seize opportunities, and etch their names in history through consistent excellence and defining moments.
 
 ## What are some weaknesses of what was done?
-While this paper offers valuable insights, there are several limitations worth acknowledging. First, the predictive model relies on the assumption that Mahomes’ career trajectory will follow trends observed in Brady’s career, which may not account for unforeseen injuries, team dynamics, or changes in the NFL landscape. Second, the analysis predominantly focuses on individual statistics without fully considering the impact of team success, coaching, or supporting cast, all of which significantly contribute to a quarterback’s achievements. Lastly, the reliance on ESPN’s QBR as a key metric introduces subjectivity, as its proprietary formula may not fully capture the nuances of on-field performance.
+While this paper offers some insights, there are several limitations worth acknowledging. First, the predictive model relies on the assumption that Mahomes’ career trajectory will follow trends observed in Brady’s career, which may not account for unforeseen injuries, team dynamics, or changes in the NFL landscape. Second, the analysis predominantly focuses on individual statistics without fully considering the impact of team success, coaching, or supporting cast, all of which significantly contribute to a quarterback’s achievements. Lastly, the reliance on ESPN’s QBR as a key metric introduces subjectivity, as its proprietary formula may not fully capture the nuances of on-field performance.
 
 ## What is left to learn or how should we proceed in the future?
-Future research should address the limitations identified above by incorporating a broader set of variables, such as coaching quality, team composition, and strength of schedule, to provide a more holistic assessment of quarterback performance. Additionally, as Mahomes’ career progresses, longitudinal studies can reevaluate his trajectory using updated data. Advances in machine learning could also enable the development of more sophisticated models to predict player performance under varying conditions. Lastly, further exploration into how the definition of greatness evolves across sports can provide context for comparing athletes from different eras, enhancing the broader conversation about legacy and excellence.
+Future research should address the limitations identified above by incorporating a broader set of variables, such as coaching quality, team composition, and strength of schedule, to provide a more holistic assessment of quarterback performance. Additionally, as Mahomes’ career progresses, longitudinal studies can reevaluate his trajectory using updated data. Advances in machine learning could also enable the development of more sophisticated models to predict player performance under varying conditions. Lastly, looking into how the definition of greatness evolves across sports can provide context for comparing athletes from different eras, enhancing the broader conversation about legacy and excellence.
 
 Other than that, the only thing left to do is wait and see. The Mahomes led Chiefs are 9-1 as this is being written. They are coming off back-to-back Super Bowl victories, they are in the midst of a dynasty and all that is left to do is witness greatness unfold. 
 
@@ -508,7 +508,7 @@ To address these biases, the analysis normalized certain statistics, such as ave
 
 ## Measurement Challenges and Subjectivity
 
-The NFLverse dataset depends on a combination of human and technological data collection methods. Human referees make critical decisions on plays, introducing subjectivity into measurements such as completions and ball placement:
+The NFLverse dataset depends on a combination of human and technological data collection methods. Human referees make decisions on plays, introducing subjectivity into measurements such as completions and ball placement:
 
 - **Completions**: Determining whether a pass is caught often involves split-second judgments by referees, who must assess factors like possession, control, and boundary location. Video reviews mitigate errors but do not eliminate them entirely.
 - **Ball Placement**: The spotting of the ball is another area of potential variability. Referees estimate the exact location based on visual assessment, which can result in small but impactful discrepancies in rushing and passing yard statistics.
@@ -519,18 +519,19 @@ To assess the impact of these subjective measurements, a simulation was performe
 
 The challenges outlined above align with findings in the sports analytics literature. Researchers such as Goldsberry (2019) have highlighted the limitations of observational data in basketball, emphasizing that player performance is deeply intertwined with contextual variables. Similarly, Burke et al. (2020) demonstrated the importance of adjusting football statistics for external factors, such as opponent strength and game context, when evaluating player performance.
 
-Building on these frameworks, this analysis incorporated advanced metrics like ESPN's QBR, which contextualizes a quarterback's contributions within the broader game environment. While QBR addresses some limitations of traditional statistics, it remains an observational metric and is thus subject to the same biases and variability.
+Building on these frameworks, this analysis incorporated metrics like ESPN's QBR, which contextualizes a quarterback's contributions within the broader game environment. While QBR addresses some limitations of traditional statistics, it remains an observational metric and is thus subject to the same biases and variability.
 
 ## Conclusion: Strengths and Limitations of Observational Data
 
-The NFLverse dataset represents one of the most comprehensive sources of quarterback performance data available, but its observational nature necessitates careful consideration of biases, subjectivity, and measurement variability. By employing normalization techniques, incorporating advanced metrics, and referencing existing literature, this analysis seeks to provide a balanced and nuanced comparison of Brady and Mahomes.
+The NFLverse dataset represents one of the most comprehensive sources of quarterback performance data available, but its observational nature necessitates careful consideration of biases, subjectivity, and measurement variability. By employing normalization techniques, and referencing existing literature, this analysis seeks to provide a balanced and nuanced comparison of Brady and Mahomes.
 
-While observational data cannot establish causality, it offers valuable insights into patterns and trends, particularly when analyzed with an awareness of its limitations. Future work could enhance these findings by incorporating experimental methods, such as simulations or controlled studies, to isolate causal factors influencing quarterback performance.
+While observational data cannot establish causality, it offers insights into patterns and trends, particularly when analyzed with an awareness of its limitations. Future work could enhance these findings by incorporating experimental methods, such as simulations or controlled studies, to isolate causal factors influencing quarterback performance.
 
 
 
 
 # References
+
 
 
 
