@@ -1,7 +1,7 @@
 #### Preamble ####
 # Purpose: Simulates and saves a dataset containing select QBR data for Tom Brady and Patrick Mahomes, retaining only specified columns.
 # Author: Alexander Guarasci
-# Date: 26 November 2024
+# Date: 1 December, 2024
 # Contact: alexander.guarasci@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: The `dplyr` and `arrow` packages must be installed.
