@@ -9,6 +9,7 @@
 # Load necessary libraries
 library(dplyr)
 library(arrow)
+library(caret)  # For the createDataPartition function to split data
 
 # Load the dataset
 file_path <- "~/nfl/data/analysis_data/game_stats/merged_player_game.parquet"
@@ -18,13 +19,10 @@ player_data <- read_parquet(file_path)
 brady_data <- player_data %>% filter(player_name == "T.Brady")
 mahomes_data <- player_data %>% filter(player_name == "P.Mahomes")
 
-# Select numeric columns for regression
+# Select relevant numeric columns for regression
 numeric_features <- c(
-  "completions", "attempts", "passing_yards", "passing_tds",
-  "interceptions", "sack_fumbles", "sack_fumbles_lost",
-  "passing_air_yards", "passing_first_downs", "passing_2pt_conversions",
-  "carries", "rushing_yards", "rushing_tds", "rushing_fumbles",
-  "rushing_fumbles_lost", "rushing_first_downs"
+  "completions", "attempts", "passing_yards", "passing_tds", 
+  "interceptions", "carries", "rushing_yards", "rushing_tds"
 )
 
 # Ensure no missing values in selected columns for Tom Brady
@@ -32,16 +30,39 @@ brady_data_clean <- brady_data %>%
   select(all_of(numeric_features)) %>%
   na.omit()
 
-# Create the linear regression model
+# Set seed for reproducibility
+set.seed(8)
+
+# Create a 80/20 train-test split
+train_index <- createDataPartition(brady_data_clean$completions, p = 0.80, list = FALSE)
+train_data <- brady_data_clean[train_index, ]
+test_data <- brady_data_clean[-train_index, ]
+
+# Create the linear regression model using Brady's training data
 reg_model <- lm(
   cbind(
-    completions, attempts, passing_yards, passing_tds, interceptions,
-    sack_fumbles, sack_fumbles_lost, passing_air_yards, passing_first_downs,
-    passing_2pt_conversions, carries, rushing_yards, rushing_tds,
-    rushing_fumbles, rushing_fumbles_lost, rushing_first_downs
+    completions, attempts, passing_yards, passing_tds, interceptions, 
+    carries, rushing_yards, rushing_tds
   ) ~ ., 
-  data = brady_data_clean
+  data = train_data
 )
+
+# Use the trained model to predict on Brady's test data
+predicted_brady_stats <- predict(
+  reg_model, newdata = test_data
+)
+
+# Convert the predictions into a data frame
+predicted_df <- as.data.frame(predicted_brady_stats)
+
+# Calculate RMSE for each variable in the test set
+rmse_values <- sapply(1:ncol(predicted_df), function(i) {
+  sqrt(mean((test_data[[i]] - predicted_df[[i]])^2))
+})
+
+# Print RMSE values for each variable
+print("RMSE for each variable in the test set:")
+print(rmse_values)
 
 # Prepare Mahomes' per-game averages
 mahomes_per_game <- mahomes_data %>%
@@ -69,7 +90,7 @@ summary_row <- lifetime_totals %>%
          games_played = nrow(mahomes_data) + 200)
 
 # Save predictions to a file
-output_path <- "~/nfl/data/analysis_data/mahomes_lifetime_predictions.csv"
+output_path <- "~/nfl/data/model_data/mahomes_lifetime_predictions.csv"
 write.csv(summary_row, output_path, row.names = FALSE)
 
 # Confirm the script's output
