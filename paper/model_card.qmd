@@ -16,7 +16,7 @@ format:
 
 **Input Data**:  
 - Dataset: Player-level NFL game statistics from `merged_player_game.parquet`.  
-- Features: 16 numerical features, including completions, attempts, passing yards, passing touchdowns, interceptions, and rushing statistics.  
+- Features: Includes completions, attempts, passing yards, passing touchdowns, interceptions, and rushing statistics.  
 - Training Data: Filtered observations of Tom Brady's career game statistics.  
 - Prediction Data: Patrick Mahomes' per-game averages, projected over the next 200 games.
 
@@ -41,17 +41,10 @@ This model predicts the lifetime performance metrics of NFL quarterbacks by proj
 
 ## Performance Characteristics
 
-**Evaluation Metrics**: The model's fit and prediction accuracy were evaluated using the following metrics:  
-- Adjusted R² values for multivariate regression.  
-- Mean squared error (MSE) for the fitted model.  
+**Evaluation Metrics**: The model's fit and prediction accuracy were evaluated using RMSE following
 
 **Performance on Training Data (Tom Brady)**:  
-- The model successfully captured trends in Tom Brady’s career statistics, showing high adjusted R² values for most features.  
-- No missing data points were included in the training subset.
-
-**Projection Validation**:  
-- Model predictions were cross-referenced with Mahomes' historical averages.  
-- Assumes statistical continuity in performance.
+- The model somewhat successfully captured trends in Tom Brady’s career statistics
 
 ---
 
@@ -69,7 +62,7 @@ This model predicts the lifetime performance metrics of NFL quarterbacks by proj
 
 ## Limitations
 
-1. **Contextual Limitations**: The model assumes that Patrick Mahomes' future performance mirrors his historical averages and does not account for potential changes in playing style, team composition, or career disruptions.
+1. **Contextual Limitations**: The model assumes that Patrick Mahomes' future performance mirrors Tom Brady's and does not account for potential changes in playing style, team composition, or career disruptions.
    
 2. **Feature Scope**: Only numerical features were included. Non-numerical factors such as play-calling strategies, weather, or team dynamics are excluded.
 

@@ -45,7 +45,7 @@ The paper is structured as follows: the first section provides an explanation of
 
 The data used in this analysis originates from nflverse [@citenflverse], a collection of packages tailored for NFL data. These packages aggregate statistics, player information and game results spanning several decades. For this paper, the focus was narrowed to quarterback (QB) performance data, specifically for Tom Brady and Patrick Mahomes.
 
-The analysis was conducted in R [@citeR], leveraging tools from the Tidyverse [@citetidyverse], Arrow [@citearrow], Knitr [@citeknitr], and Testthat [@citett] packages. The primary dataset included QB-specific data from every NFL game played since 2000, encompassing over 55 columns detailing various player performance metrics. Additional data sources were used for ESPN’s Quarterback Rating (QBR), which encapsulates QB efficiency across multiple dimensions of gameplay.
+The analysis was conducted in R [@citeR], leveraging tools from the Tidyverse [@citetidyverse], Caret [@citecaret], Arrow [@citearrow], Knitr [@citeknitr], and Testthat [@citett] packages. The primary dataset included QB-specific data from every NFL game played since 2000, encompassing over 55 columns detailing various player performance metrics. Additional data sources were used for ESPN’s Quarterback Rating (QBR), which encapsulates QB efficiency across multiple dimensions of gameplay.
 
 The analysis focuses on comparing the careers of two of the greatest football players of all time: Tom Brady and Patrick Mahomes. Both players’ careers are completely represented in the dataset, allowing for an in-depth comparison of Mahomes’ trajectory against Brady’s completed career. To achieve this, the dataset was filtered to include only these two players, with irrelevant data removed. For example, receiving yards were excluded since quarterbacks rarely make receptions. The refined dataset highlights key metrics such as completions, attempts, passing yards, interceptions, and a variety of quarterback rushing stats, which have become increasingly relevant in modern NFL play.
 
@@ -62,7 +62,7 @@ Another important element of football data collection lies in the placement of t
 These nuances highlight the challenges inherent in translating the dynamic, real-time events of a football game into static data entries. The dataset used in this analysis reflects not only the physical phenomena observed on the field but also the interpretive decisions made by officials, which can influence measures like completions and ball placement. This underscores the importance of considering the limitations and subjectivity embedded within the data when drawing conclusions about player performance and game outcomes.
 
 ## Variables of Interest
-Most of the variables used in this analysis are relatively straight forward. Passing yards is the vertical distance a passing play gains. For example, if a quarterback throws a pass and the receiver catches 10 yards down the field and runs for another 10 yards before being tackled or going out of bounds, that will count as 20 passing yards for the Quarterback. Rushing yards are the number of yards a player runs with the ball past the line of scrimmage - if the ball is caught as a pass, it does not count towards rushing yards. Passing touchdowns are simply a passing play that turns into a touchdown and rushing touchdowns are a rush that turns into a touchdown. Interceptions are passes made by a quarterback and caught by the other team. 
+Most of the variables used in this analysis are relatively straight forward. Passing yards is the vertical distance a passing play gains. For example, if a quarterback throws a pass and the receiver catches 10 yards down the field and runs for another 10 yards before being tackled or going out of bounds, that will count as 20 passing yards for the Quarterback. Rushing yards are the number of yards a player runs with the ball past the line of scrimmage - if the ball is caught as a pass, it does not count towards rushing yards. Passing touchdowns are simply a passing play that turns into a touchdown and rushing touchdowns are a rush that turns into a touchdown. Interceptions are passes made by a quarterback and caught by the other team. Carries are how many rush attempts the QB has.
 
 The most complicated variable used in the analysis is ESPN QBR. This is a stat that aims explain the totality of how a quarterback is playing. It is a scale from 0-100 with 50 being average. ESPN says "it incorporates all of a quarterback’s contributions to winning, including how he impacts the game on passes, rushes, turnovers and penalties. Also, since QBR is built from the play level, it accounts for a team’s level of success or failure on every play to provide the proper context and then allocates credit to the quarterback and his teammate to produce a clearer measure of quarterback efficiency" [@citeespn]. Overall, it aims to give an overview of how well a quarterback played.
 
@@ -241,93 +241,110 @@ Although the previous graphs were useful in getting a picture of the two players
 
 # Model
 
-## Model Overview
+## Overview
 
-We designed a predictive model to estimate Patrick Mahomes' cumulative career statistics over an additional 200 games. The model is trained on historical game data from Tom Brady as a benchmark and Patrick Mahomes' existing career data to generate predictions for key performance metrics.
+The goal of this analysis is to predict Patrick Mahomes' lifetime career statistics over 200 additional games using a regression model. This model uses data from Tom Brady's career as a proxy for player performance and is designed to forecast Mahomes' future performance across key metrics, such as completions, attempts, passing yards, rushing yards, and touchdowns.
 
-### Mathematical Notation
+## Data
 
-The model is a multivariate linear regression defined as:
+The dataset used in this analysis is a combination of game-level statistics for two players: Tom Brady and Patrick Mahomes. The data includes multiple variables that track each player's performance across different games. The key features used in this model are:
+
+- **completions**: The number of successful passes thrown.
+- **attempts**: The total number of pass attempts.
+- **passing_yards**: The total yards gained from passing attempts.
+- **passing_tds**: The total number of passing touchdowns.
+- **interceptions**: The total number of interceptions thrown.
+- **carries**: The number of rushing attempts.
+- **rushing_yards**: The total rushing yards gained.
+- **rushing_tds**: The total number of rushing touchdowns.
+
+
+The model used in this analysis is a multiple linear regression model. We choose linear regression because it is a simple yet effective approach for modeling continuous outcomes and provides easy interpretability. 
+
+### Equation for the Model
+
+The model predicts the following variables for Patrick Mahomes:
+
+- \( \text{completions}, \text{attempts}, \text{passing yards}, \text{passing tds}, \text{interceptions}, \text{carries}, \text{rushing yards}, \text{rushing tds} \)
+
+The general form of the multiple linear regression model is:
 
 $$
-\hat{y}_i = \beta_0 + \sum_{j=1}^p \beta_j x_{ij} + \epsilon_i
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_n X_n + \epsilon
 $$
 
 Where:
 
-- $\hat{y}_i$: Predicted value of the response variable (e.g., total passing yards).  
-- $\beta_0$: Intercept term.  
-- $\beta_j$: Coefficients for predictors $x_{ij}$, representing the influence of the $j$-th feature on the response variable.  
-- $x_{ij}$: Observed value of the $j$-th predictor for the $i$-th observation.  
-- $\epsilon_i$: Residual error term, assumed to be normally distributed with mean 0.  
+- $Y$ represents the outcome variable (e.g., completions, attempts, passing yards, etc.).
+- $X_1, X_2, \dots, X_n$ are the predictor variables (game statistics such as completions, attempts, etc.).
+- $\beta_0$ is the intercept.
+- $\beta_1, \beta_2, \dots, \beta_n$ are the coefficients for each predictor.
+- $\epsilon$ is the error term.
 
-We estimate $\beta_0$ and $\beta_j$ using Ordinary Least Squares (OLS) on Tom Brady's historical data, as his career provides a well-documented trajectory for long-term performance.
+### Training and Validation
 
-### Variables and Justification
+We trained the model using data from Tom Brady's career, specifically using the following steps:
 
-The predictors ($x_j$) included in the model are chosen based on their relevance to a quarterback's performance:
+1. **Data Preparation**: We selected relevant features and ensured there were no missing values in the training dataset.
+2. **Model Creation**: A multiple linear regression model was created using the `lm()` function in R. The model predicts the selected statistics for each game.
+3. **Training/Test Split**: The dataset was split into training (80%) and testing (20%) sets to evaluate model performance.
+4. **Prediction**: The trained model was used to predict Mahomes' statistics for the next 200 games.
 
-1. **Passing Metrics**:  
-   - `completions`, `attempts`, `passing_yards`, `passing_tds`, `interceptions`.  
-   - These metrics directly influence a quarterback’s overall contribution to team success.
+We also calculated the Root Mean Squared Error (RMSE) for each predicted variable in the test set as an evaluation metric. RMSE is a commonly used metric to measure the accuracy of regression models, and it is calculated as:
 
-2. **Rushing Metrics**:  
-   - `carries`, `rushing_yards`, `rushing_tds`.  
-   - While not the primary focus, rushing performance is an insightful metric for dual-threat quarterbacks like Mahomes.
+$$
+RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
+$$
+
+Where:
+
+- $y_i$ is the actual value of the statistic.
+
+- $\hat{y}_i$ is the predicted value.
+
+- $n$ is the number of test samples.
 
 
-These features ensure the model captures both primary and auxiliary aspects of quarterback performance.
+The RMSE values for each variable in the test set are as follows:
 
-### Model Assumptions
 
-1. **Linearity**: The relationship between predictors and response variables is linear.  
-2. **Independence**: Residuals are independent across observations.  
-3. **Homoscedasticity**: Residuals have constant variance.  
-4. **Normality**: Residuals are normally distributed.  
-5. **Stationarity**: Mahomes' performance trajectory will follow trends observed in Brady's career.
+completions: 6.01,
+attempts: 9.57,
+passing yards: 75.90,
+passing touchdowns: 1.28,
+interceptions: 0.80,
+carries: 1.72,
+rushing yards: 4.70 and
+rushing touchdowns: 0.15
 
-### Software and Implementation
 
-The model was implemented using R, leveraging the `lm` function from the `stats` package for regression. The dataset was preprocessed using `tidyverse`, and predictions were calculated for an additional 200 games using the coefficients estimated from Brady's data.
-
-### Validation and Diagnostics
-
-1. **Train-Test Split**: The Brady dataset was split into training (80%) and testing (20%) sets. The model was trained on the training set and validated on the testing set.  
-2. **Error Metrics**:  
-   - **Root Mean Squared Error (RMSE)**: Measures the model's predictive accuracy.  
-   - **Mean Absolute Error (MAE)**: Evaluates average prediction error.  
-3. **Residual Analysis**:  
-   - Residual plots confirmed the assumptions of homoscedasticity and normality.  
-4. **Out-of-Sample Testing**: Predicted Mahomes' statistics on his observed data and compared with actual results to ensure alignment.
+These RMSE values indicate that the model has some level of predictive accuracy but also considerable error in certain variables, such as passing yards. The RMSE is higher than expected, which can be attributed to the limited dataset size used in this model. The dataset contains a relatively small number of games, which leads to higher variability and uncertainty in the predictions.
 
 ### Alternative Models Considered
 
 1. **Decision Trees**:  
    - Strengths: Captures non-linear relationships.  
-   - Weaknesses: Tends to overfit without pruning; less interpretable than linear regression.
+   - Weaknesses: Tends to overfit without pruning; less interpretable than linear regression, and still had high error.
 
 2. **Bayesian Regression**:  
    - Strengths: Allows incorporation of priors, producing probabilistic predictions.  
-   - Weaknesses: Increased complexity and computational requirements.
+   - Weaknesses: Increased complexity and computational requirements and also had high error.
 
 3. **Final Choice**:  
-   - Linear regression was chosen for its balance of simplicity, interpretability, and performance. It aligns with the assumption that a quarterback’s performance trends over time can be captured linearly.
+   - Linear regression was chosen for its balance of simplicity, interpretability, and performance.
 
-### Limitations
+## Limitiations
 
-1. **Career Longevity**:  
-   - The model assumes Mahomes will continue performing at a consistent level for 200 games. This may not account for potential injuries, performance decline, or external factors. This is already a very generous assumption, considering only two quarterbacks in NFL history have played more than 324 career games, but because Brady has played 381 games, it is important for our analysis to assume that Mahomes will be able to sustain success. 
-2. **Sample Bias**:  
-   - Relying on Brady's career as a benchmark may introduce bias, as it assumes Mahomes will follow a similar trajectory.  
-3. **Feature Engineering**:  
-   - Excluding contextual factors like team strength or play style may limit predictive accuracy.
+While the RMSE values suggest some error in the predictions, this is expected due to the limited amount of available data. The performance of the model could likely improve with a larger and more balanced dataset that includes a broader range of game conditions. Additionally, while we used Tom Brady’s statistics as a proxy for Mahomes, differences in their playing styles and team dynamics could also contribute to the prediction error.
 
-### Conclusion
+The linear regression model assumes that the relationships between the predictors and the outcomes are linear, which may not always be the case in real-world scenarios. Further exploration of alternative models, such as non-linear regression or machine learning techniques like decision trees, could be considered for improving predictions.
 
-The linear regression model provides a robust yet interpretable framework for predicting Mahomes' lifetime stats. It is grounded in historical data and validated through residual analysis and error metrics. While limitations exist, the model effectively captures the essence of Mahomes' expected performance trajectory based on Brady's historical patterns.
+## Conclusion
+
+This model provides a reasonable estimate of Patrick Mahomes’ lifetime career statistics over 200 additional games based on Tom Brady’s historical data. Although the RMSE values suggest room for improvement, the model serves as a useful starting point for projecting Mahomes’ future performance. Future work could include expanding the dataset, exploring non-linear modeling techniques, and accounting for player-specific factors that might differ between Brady and Mahomes.
 
 # Results
- [@tbl-brady-mahomes-career-stats] compares Tom Brady’s career statistics with Patrick Mahomes’ projected lifetime statistics. Tom Brady, with 8,954 completions and 13,973 attempts, has significantly more career completions and attempts than Mahomes, who is projected to finish with 7,756.72 completions and 11,902.61 attempts. Brady’s total passing yards of 102,616 far exceed Mahomes’ projected 89,548.38, highlighting Brady’s longevity and consistent performance. Similarly, Brady has thrown 738 passing touchdowns, whereas Mahomes is projected to finish with 660.38. Brady also has more interceptions (252 compared to Mahomes’ 213.59). These differences underscore Brady’s long career and high volume of passing, which has contributed to his unrivaled career achievements.
+ [@tbl-brady-mahomes-career-stats] compares Tom Brady’s career statistics with Patrick Mahomes’ projected lifetime statistics. Tom Brady, with 8,954 completions and 13,973 attempts, has significantly more career completions and attempts than Mahomes, who is projected to finish with 7,763 completions and 11,925 attempts. Brady’s total passing yards of 102,616 far exceed Mahomes’ projected 89,160, highlighting Brady’s longevity and consistent performance. Similarly, Brady has thrown 738 passing touchdowns, whereas Mahomes is projected to finish with 654. Brady also has more interceptions (252 compared to Mahomes’ 216). These differences underscore Brady’s long career and high volume of passing, which has contributed to his unrivaled career achievements.
 
 ```{r}
 #| label: tbl-brady-mahomes-career-stats
@@ -387,7 +404,7 @@ tt(final_table, width = 1.5) |> style_tt( fontsize = 1)
 ```
 
 
-When comparing rushing statistics, Mahomes stands out as the more mobile quarterback. While Brady’s rushing stats are modest, with 1,256 rushing yards and 35 rushing touchdowns, Mahomes is projected to amass 3,282.88 rushing yards and 36.28 rushing touchdowns, showing a clear advantage in rushing ability. Additionally, Mahomes is expected to have 319.90 rushing first downs, surpassing Brady’s 266. This emphasizes Mahomes’ dual-threat capability, which contributes to his versatility as a quarterback.
+When comparing rushing statistics, Mahomes stands out as the more mobile quarterback. While Brady’s rushing stats are modest, with 1,256 rushing yards and 35 rushing touchdowns, Mahomes is projected to amass 3,348 rushing yards and 40 rushing touchdowns, showing a clear advantage in rushing ability. This emphasizes Mahomes’ dual-threat capability, which contributes to his versatility as a quarterback.
 
 Despite Mahomes’ impressive projected stats, Brady’s career longevity and overall impact on the game have allowed him to achieve these remarkable milestones. Mahomes will need to maintain his performance over a long period to catch up to Brady’s cumulative totals. Brady’s consistency and durability throughout his career, as seen in his passing and rushing stats, have firmly established him as one of the greatest quarterbacks in NFL history. Mahomes, on the other hand, shows great potential and is already a future first ballot Hall of Famer, but he has yet to match Brady’s career volume.
 
@@ -438,11 +455,11 @@ final_table <- per_game_stats %>%
 tt(final_table, width = 1.5) |> style_tt( fontsize = 1)
 ```
 
-The analysis of per-game statistics shows a clear edge for Patrick Mahomes over Tom Brady across nearly every metric. Mahomes completes slightly more passes per game (23.94) than Brady (23.50), despite attempting a comparable number of throws (36.74 for Mahomes vs. 36.67 for Brady). This small difference results in a higher completion percentage for Mahomes at 65.17%, compared to Brady’s 64.08%, indicating a marginal but noteworthy advantage in passing efficiency. Mahomes also outpaces Brady in passing yards per game, averaging 276.38 to Brady’s 269.33, further emphasizing his ability to generate more offense through the air.
+The analysis of per-game statistics shows a clear edge for Patrick Mahomes over Tom Brady across nearly every metric. Mahomes completes slightly more passes per game (23.96) than Brady (23.50), despite attempting a comparable number of throws (36.81 for Mahomes vs. 36.67 for Brady). This small difference results in a higher completion percentage (defined as the number of completions divided by the number of attempts) for Mahomes at 65.10%, compared to Brady’s 64.08%, indicating a marginal but noteworthy advantage in passing efficiency. Mahomes also outpaces Brady in passing yards per game, averaging 275.18 to Brady’s 269.33, further emphasizing his ability to generate more offense through the air.
 
-In terms of scoring, Mahomes demonstrates a superior passing touchdown rate, averaging 2.04 touchdowns per game compared to Brady’s 1.94. Both players maintain an impressive level of ball security, with nearly identical interception rates per game (0.66).
+In terms of scoring, Mahomes demonstrates a superior passing touchdown rate, averaging 2.02 touchdowns per game compared to Brady’s 1.94. Both players maintain an impressive level of ball security, with nearly identical interception rates per game (0.66 for Brady to 0.67 for Mahomes).
 
-The most significant disparity appears in rushing statistics, where Mahomes outshines Brady by a wide margin. Mahomes averages 10.13 rushing yards per game, more than triple Brady’s 3.30, and his higher number of carries per game (2.85 vs. 2.12) underscores his ability to contribute as a dual-threat quarterback. Furthermore, Mahomes’ rushing touchdown rate (0.11 per game) surpasses Brady’s 0.09, further illustrating his dynamic impact on the ground.
+The most significant disparity appears in rushing statistics, where Mahomes outshines Brady by a wide margin. Mahomes averages 10.33 rushing yards per game, more than triple Brady’s 3.30, and his higher number of carries per game (2.87 vs. 2.12) underscores his ability to contribute as a dual-threat quarterback. Furthermore, Mahomes’ rushing touchdown rate (0.12 per game) surpasses Brady’s 0.09, further illustrating his dynamic impact on the ground.
 
 These results suggest that Mahomes not only matches but surpasses Brady’s per-game contributions in every key category, showcasing his all-around ability as a quarterback. The consistent superiority in passing, rushing, and overall efficiency highlights Mahomes’ potential to redefine expectations for quarterback performance in the NFL.
 
@@ -519,3 +536,6 @@ While observational data cannot establish causality, it offers insights into pat
 
 
 # References
+
+
+
