@@ -1,11 +1,3 @@
-#### Preamble ####
-# Purpose: Predict Patrick Mahomes' lifetime career stats for 200 additional games
-# Author: Alexander Guarasci
-# Date: 1 December, 2024
-# Contact: alexander.guarasci@mail.utoronto.ca
-# License: MIT
-# Pre-requisites: The `tidyverse`, `caret` and `arrow` packages must be installed.
-
 # Load necessary libraries
 library(dplyr)
 library(arrow)
